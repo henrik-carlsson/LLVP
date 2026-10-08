@@ -43,7 +43,7 @@ class BuildPlanTest(unittest.TestCase):
         self.assertTrue(all(r["setpoint_c"] == CFG["base_c"] for r in expensive))
 
     def test_schedule_merges_consecutive_hours(self):
-        rows = plan.build_plan(prices_from([0.2] * 6 + [3.0] * 6 + [1.0] * 12), {}, CFG)
+        rows = plan.build_plan(prices_from([0.2] * 8 + [3.0] * 8 + [1.0] * 8), {}, CFG)
         blocks = plan.to_schedule(rows)
         self.assertLess(len(blocks), len(rows))
         self.assertEqual(blocks[0]["setpoint_c"], 16.0)

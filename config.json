@@ -8,9 +8,19 @@
   "max_c": 16.0,
   "preheat_c": 2.0,
   "setback_c": 2.0,
-  "cheap_percentile": 25,
-  "expensive_percentile": 75,
-  "min_spread_sek_per_kwh": 0.10,
+  "cheap_percentile": 33,
+  "expensive_percentile": 67,
+  "min_spread_sek_per_kwh": 0.1,
   "no_setback_below_outdoor_c": -10.0,
-  "horizon_hours": 36
+  "horizon_hours": 36,
+  "simulation": {
+    "ua_w_per_k": 90,
+    "capacity_kwh_per_k": 8,
+    "cop_at_0c": 3.2,
+    "cop_per_k": 0.08,
+    "cop_min": 1.8,
+    "cop_max": 5.0,
+    "pmax_kw_at_7c": 4.0,
+    "pmax_derate_kw_per_k": 0.05
+  }
 }

@@ -6,7 +6,7 @@ Räknar varje dag fram en måltemperatur per timme för luft/luft-värmepumpen (
 
 ## Logik
 - Grundtemperatur 14 °C, aldrig under 12 °C eller över 16 °C (`config.json`).
-- Billigaste kvartilen av timmarna: förvärm (+2 °C). Dyraste kvartilen: sänk (−2 °C).
+- Billigaste tredjedelen av timmarna: förvärm (+2 °C). Dyraste tredjedelen: sänk (−2 °C).
 - Små prisskillnader (< 0,10 kr/kWh mellan billig och dyr nivå): håll grundtemperaturen.
 - Under −10 °C ute sänks inte temperaturen på dyra timmar.
 
