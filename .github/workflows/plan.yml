@@ -1,0 +1,30 @@
+name: Daglig plan (torrkörning)
+
+on:
+  schedule:
+    # 12:30 UTC = 13:30 vintertid / 14:30 sommartid, efter att morgondagens spotpriser publicerats (~13:00)
+    - cron: "30 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Kör tester
+        run: python -m unittest discover -s tests
+      - name: Skapa plan
+        run: python plan.py
+      - name: Spara planen i repot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add plans/
+          git diff --cached --quiet || git commit -m "Ny plan $(date -u +%F)"
+          git push

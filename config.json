@@ -1,0 +1,16 @@
+{
+  "price_area": "SE3",
+  "latitude": 60.95,
+  "longitude": 14.55,
+  "timezone": "Europe/Stockholm",
+  "base_c": 14.0,
+  "min_c": 12.0,
+  "max_c": 16.0,
+  "preheat_c": 2.0,
+  "setback_c": 2.0,
+  "cheap_percentile": 25,
+  "expensive_percentile": 75,
+  "min_spread_sek_per_kwh": 0.10,
+  "no_setback_below_outdoor_c": -10.0,
+  "horizon_hours": 36
+}
