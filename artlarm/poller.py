@@ -16,7 +16,8 @@ STHLM = ZoneInfo("Europe/Stockholm")
 def format_alert(obs: Observation, property_name: str) -> str:
     when = obs.observed_at
     when = when.replace(tzinfo=STHLM) if when.tzinfo is None else when.astimezone(STHLM)
-    parts = [f"{obs.taxon}, {when:%Y-%m-%d %H:%M}, {property_name}"]
+    stamp = f"{when:%Y-%m-%d}" if (when.hour, when.minute) == (0, 0) else f"{when:%Y-%m-%d %H:%M}"  # 00:00 = ingen tid angiven
+    parts = [f"{obs.taxon}, {stamp}, {property_name}"]
     if obs.url:
         parts.append(obs.url)
     return ". ".join(parts)

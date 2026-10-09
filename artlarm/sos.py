@@ -58,7 +58,24 @@ class SosClient:
         observed_from: Optional[date] = None,
         modified_from: Optional[date] = None,
     ) -> List[Observation]:
-        """Hämtar observationer inom geometrin (alla sidor)."""
+        """Hämtar observationer inom geometrin (alla sidor). MultiPolygon söks del för del."""
+        parts = (
+            [{"type": "polygon", "coordinates": c} for c in geometry["coordinates"]]
+            if geometry["type"].lower() == "multipolygon"
+            else [{"type": "polygon", "coordinates": geometry["coordinates"]}]
+        )
+        seen: Dict[str, Observation] = {}
+        for part in parts:
+            for o in self._search_polygon(part, observed_from, modified_from):
+                seen.setdefault(o.occurrence_id, o)
+        return list(seen.values())
+
+    def _search_polygon(
+        self,
+        geometry: Dict[str, Any],
+        observed_from: Optional[date],
+        modified_from: Optional[date],
+    ) -> List[Observation]:
         body: Dict[str, Any] = {
             "geographics": {"geometries": [geometry], "considerObservationAccuracy": False},
             "output": {"fields": ["occurrence.occurrenceId", "event.startDate",
