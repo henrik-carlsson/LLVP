@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artlarm</title>
+<style>
+ body{font:16px system-ui;max-width:640px;margin:2rem auto;padding:0 16px}
+ label{display:block;margin:.8rem 0 .2rem;font-weight:600}
+ input,textarea{width:100%;padding:.5rem;box-sizing:border-box;font:inherit}
+ .prop{border:1px solid #ccc;padding:.6rem;margin:.6rem 0;border-radius:6px}
+ button{padding:.5rem 1rem;margin:.5rem .5rem 0 0} li{margin:.4rem 0}
+ #msg{margin-top:1rem}
+</style>
+<h1>Artlarm</h1>
+<p>Få SMS när en artobservation (Artportalen) görs på dina fastigheter.</p>
+<form id="f">
+ <label>Telefonnummer (SMS)</label><input id="phone" placeholder="070-123 45 67">
+ <label>E-postadress</label><input id="email" type="email" placeholder="namn@example.se">
+ <p><small>Ange telefonnummer, e-post eller båda.</small></p>
+ <label>Startdatum (kan vara bakåt eller framåt)</label><input id="start" type="date" required>
+ <h3>Fastigheter</h3><div id="props"></div>
+ <button type="button" id="add">+ Lägg till fastighet</button>
+ <button>Spara</button>
+</form>
+<div id="msg"></div>
+<h3>Aktiva larm</h3><ul id="list"></ul>
+<script>
+const props=document.getElementById('props');
+function addProp(){const d=document.createElement('div');d.className='prop';d.innerHTML=
+ '<label>Namn</label><input class="n" required>'+
+ '<label>Fastighetsbeteckning (t.ex. Uppsala Gamla Uppsala 1:1)</label><input class="d">'+
+ '<label>…eller GeoJSON-polygon (WGS84)</label><textarea class="g" rows="3"></textarea>';props.append(d)}
+addProp();document.getElementById('add').onclick=addProp;
+document.getElementById('start').valueAsDate=new Date();
+async function load(){const r=await (await fetch('/api/subscriptions')).json();
+ document.getElementById('list').innerHTML=r.map(s=>`<li>${[s.phone,s.email].filter(Boolean).join(' + ')}, från ${s.start_date}: ${s.properties.map(p=>p.name).join(', ')}
+ <button onclick="del(${s.id})">Ta bort</button></li>`).join('')}
+async function del(id){await fetch('/api/subscriptions/'+id,{method:'DELETE'});load()}
+document.getElementById('f').onsubmit=async e=>{e.preventDefault();
+ const properties=[...props.children].map(d=>{const g=d.querySelector('.g').value.trim(),des=d.querySelector('.d').value.trim();
+  return {name:d.querySelector('.n').value,designation:des||null,geometry:g?JSON.parse(g):null}});
+ const r=await fetch('/api/subscriptions',{method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({phone:phone.value,email:email.value,start_date:start.value,properties})});
+ const m=document.getElementById('msg');
+ m.textContent=r.ok?'Sparat. Eventuella träffar sedan startdatum skickas direkt.':'Fel: '+JSON.stringify((await r.json()).detail);load()};
+load();
+</script>
