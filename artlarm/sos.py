@@ -19,13 +19,14 @@ class Observation:
     occurrence_id: str
     taxon: str          # svenskt namn, annars vetenskapligt
     observed_at: datetime
-    sighting_id: Optional[str]
+    sighting_id: Optional[str]  # Artportalen-id, bara för fynd från Artportalen
+    source_url: str = ""        # fynd från andra källor (t.ex. iNaturalist) har id:t som URL
 
     @property
     def url(self) -> str:
         if self.sighting_id:
             return config.ARTPORTALEN_SIGHTING_URL.format(id=self.sighting_id)
-        return ""
+        return self.source_url
 
 
 def parse_observation(rec: Dict[str, Any]) -> Optional[Observation]:
@@ -35,12 +36,15 @@ def parse_observation(rec: Dict[str, Any]) -> Optional[Observation]:
         return None
     taxon = rec.get("taxon") or {}
     name = taxon.get("vernacularName") or taxon.get("scientificName") or "Okänd art"
-    m = re.search(r"(\d+)$", occ)  # urn:lsid:artportalen.se:Sighting:12345
+    # SOS levererar flera källor. Artportalen: urn:lsid:artportalen.se:sighting:12345,
+    # iNaturalist m.fl.: id:t är en https-URL till fyndet.
+    m = re.fullmatch(r"urn:lsid:artportalen\.se:sighting:(\d+)", occ, re.IGNORECASE)
     return Observation(
         occurrence_id=occ,
         taxon=name[:1].upper() + name[1:],
         observed_at=datetime.fromisoformat(start.replace("Z", "+00:00")),
         sighting_id=m.group(1) if m else None,
+        source_url=occ if occ.startswith("https://") else "",
     )
 
 

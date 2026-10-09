@@ -152,3 +152,14 @@ def test_api_requires_a_channel_and_validates_email(con):
     assert client.post("/api/subscriptions", json={**base, "email": "nej"}).status_code == 422
     r = client.post("/api/subscriptions", json={**base, "email": "a@b.se"})
     assert r.status_code == 201 and r.json()["phone"] == ""
+
+
+def test_non_artportalen_sources_link_to_their_own_url():
+    o = parse_observation({"occurrence": {"occurrenceId": "https://www.inaturalist.org/observations/402181305"},
+                           "event": {"startDate": "2026-09-20T17:10:05+02:00"},
+                           "taxon": {"scientificName": "Coprinellus"}})
+    assert o.url == "https://www.inaturalist.org/observations/402181305" and o.sighting_id is None
+    o = parse_observation({"occurrence": {"occurrenceId": "urn:lsid:artportalen.se:sighting:136494510"},
+                           "event": {"startDate": "2026-09-10T00:00:00+02:00"},
+                           "taxon": {"scientificName": "Sparassis crispa", "vernacularName": "blomkålssvamp"}})
+    assert o.url == "https://www.artportalen.se/Sighting/136494510" and o.taxon == "Blomkålssvamp"

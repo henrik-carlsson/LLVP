@@ -1,5 +1,14 @@
 """Konfiguration via miljövariabler."""
 import os
+from pathlib import Path
+
+# Läs .env (KEY=värde) bredvid denna fil; riktiga miljövariabler har företräde.
+_env = Path(__file__).with_name(".env")
+if _env.exists():
+    for _line in _env.read_text().splitlines():
+        _k, _, _v = _line.strip().partition("=")
+        if _k and _v and not _k.startswith("#"):
+            os.environ.setdefault(_k, _v)
 
 DB_PATH = os.environ.get("ARTLARM_DB", "artlarm.db")
 POLL_SECONDS = int(os.environ.get("ARTLARM_POLL_SECONDS", "60"))
