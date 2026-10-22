@@ -21,6 +21,10 @@ class Observation:
     observed_at: datetime
     sighting_id: Optional[str]  # Artportalen-id, bara för fynd från Artportalen
     source_url: str = ""        # fynd från andra källor (t.ex. iNaturalist) har id:t som URL
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    uncertainty_m: Optional[float] = None
+    location_note: str = ""     # sätts av poller när läget är osäkert (utanför men inom osäkerheten)
 
     @property
     def url(self) -> str:
@@ -45,6 +49,9 @@ def parse_observation(rec: Dict[str, Any]) -> Optional[Observation]:
         observed_at=datetime.fromisoformat(start.replace("Z", "+00:00")),
         sighting_id=m.group(1) if m else None,
         source_url=occ if occ.startswith("https://") else "",
+        lat=(rec.get("location") or {}).get("decimalLatitude"),
+        lon=(rec.get("location") or {}).get("decimalLongitude"),
+        uncertainty_m=(rec.get("location") or {}).get("coordinateUncertaintyInMeters"),
     )
 
 
@@ -77,9 +84,12 @@ class SosClient:
         modified_from: Optional[date],
     ) -> List[Observation]:
         body: Dict[str, Any] = {
-            "geographics": {"geometries": [geometry], "considerObservationAccuracy": False},
+            "geographics": {"geometries": [geometry],
+                            "considerObservationAccuracy": config.CONSIDER_ACCURACY},
             "output": {"fields": ["occurrence.occurrenceId", "event.startDate",
-                                  "taxon.vernacularName", "taxon.scientificName"]},
+                                  "taxon.vernacularName", "taxon.scientificName",
+                                  "location.decimalLatitude", "location.decimalLongitude",
+                                  "location.coordinateUncertaintyInMeters"]},
         }
         if observed_from:
             body["date"] = {"startDate": observed_from.isoformat(),

@@ -228,3 +228,43 @@ def test_api_designation_uses_resolver(con):
     assert r.status_code == 201 and len(sms.sent) == 1
     r = client.post("/api/subscriptions", json={**base, "properties": [{"name": "G", "designation": "Saknas 1:1"}]})
     assert r.status_code == 404
+
+
+# --- Noggrannhet / osäkert läge ---
+from shapely.geometry import box, mapping as _mapping
+from pyproj import Transformer as _T
+
+_to_wgs = _T.from_crs("EPSG:3006", "EPSG:4326", always_xy=True).transform
+# fastighet = ruta 100x100 m i SWEREF 99 TM (Dalarna)
+_E, _N = 465000, 6790000
+_SQUARE = {"type": "Polygon", "coordinates": [[list(_to_wgs(_E + dx, _N + dy)) for dx, dy in
+                                                ((0, 0), (0, 100), (100, 100), (100, 0), (0, 0))]]}
+
+
+def _at(e, n, unc, occ="1"):
+    lon, lat = _to_wgs(e, n)
+    return Observation(f"urn:lsid:artportalen.se:Sighting:{occ}", "Gök",
+                       datetime(2026, 10, 1, 10, 0), occ, lat=lat, lon=lon, uncertainty_m=unc)
+
+
+def test_inside_is_unmarked_and_nearby_is_marked_and_far_or_vague_dropped():
+    found = [
+        _at(_E + 50, _N + 50, 10, "1"),      # inne
+        _at(_E + 150, _N + 50, 100, "2"),    # 50 m utanför, osäkerhet 100 m -> märks
+        _at(_E + 400, _N + 50, 100, "3"),    # 300 m utanför, osäkerhet 100 m -> bort
+        _at(_E + 150, _N + 50, 5000, "4"),   # för osäker (>500 m) -> bort
+    ]
+    out = {o.sighting_id: o for o in poller.apply_location_accuracy(found, _SQUARE)}
+    assert set(out) == {"1", "2"}
+    assert out["1"].location_note == ""
+    assert "ca 50 m utanför" in out["2"].location_note and "±100 m" in out["2"].location_note
+    assert poller.format_alert(out["2"], "Gården").startswith("Gök, 2026-10-01 10:00, Gården [OSÄKERT LÄGE")
+
+
+def test_marked_alert_reaches_email_subject(con):
+    mail, sms = LogEmailSender(), LogSender()
+    sid = db.add_subscription(con, "", "2026-09-01", [{"name": "Gården", "geometry": _SQUARE}], email="a@b.se")
+    poller.poll_subscription(con, FakeSos([_at(_E + 150, _N + 50, 100)]), Notifier(sms, mail),
+                             db.get_subscription(con, sid), date(2026, 10, 8))
+    to, subject, body = mail.sent[0]
+    assert subject.startswith("Artlarm (osäkert läge):") and "OSÄKERT LÄGE" in body

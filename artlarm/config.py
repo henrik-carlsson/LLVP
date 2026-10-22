@@ -38,6 +38,11 @@ SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
 EMAIL_FROM = os.environ.get("EMAIL_FROM", "artlarm@localhost")
 
+# Fynd utanför fastighetsgränsen men inom positionens osäkerhet larmas som "osäkert läge",
+# så länge osäkerheten är högst så här många meter. ARTLARM_CONSIDER_ACCURACY=0 stänger av.
+CONSIDER_ACCURACY = os.environ.get("ARTLARM_CONSIDER_ACCURACY", "1") != "0"
+MAX_UNCERTAINTY_M = float(os.environ.get("ARTLARM_MAX_UNCERTAINTY_M", "500"))
+
 # Max antal enskilda SMS per fastighet och körning; resten sammanfattas i ett SMS.
 MAX_SMS_PER_RUN = int(os.environ.get("ARTLARM_MAX_SMS_PER_RUN", "20"))
 
