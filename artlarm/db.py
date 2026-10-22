@@ -34,6 +34,22 @@ CREATE TABLE IF NOT EXISTS digests (
 """
 
 
+def split_emails(value: str) -> List[str]:
+    """Prenumerationens e-postfält kan innehålla flera adresser, kommaseparerade."""
+    return [e.strip() for e in (value or "").split(",") if e.strip()]
+
+
+def add_email(con, sub_id: int, email: str) -> bool:
+    """Lägger till en mottagare. Returnerar False om adressen redan finns."""
+    row = con.execute("SELECT email FROM subscriptions WHERE id = ?", (sub_id,)).fetchone()
+    current = split_emails(row["email"])
+    if email.lower() in (e.lower() for e in current):
+        return False
+    con.execute("UPDATE subscriptions SET email = ? WHERE id = ?", (",".join(current + [email]), sub_id))
+    con.commit()
+    return True
+
+
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 

@@ -22,6 +22,21 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("artlarm")
 
 
+_EMAIL_RE = re.compile(r"[^@\s,;]+@[^@\s,;]+\.[^@\s,;]+")
+
+
+class EmailIn(BaseModel):
+    email: str
+
+    @field_validator("email")
+    @classmethod
+    def _one(cls, v: str) -> str:
+        v = v.strip()
+        if not _EMAIL_RE.fullmatch(v):
+            raise ValueError("Ogiltig e-postadress")
+        return v
+
+
 class PropertyIn(BaseModel):
     name: str
     designation: Optional[str] = None       # fastighetsbeteckning (kräver Lantmäteri-koppling)
@@ -51,12 +66,14 @@ class SubscriptionIn(BaseModel):
     @field_validator("email")
     @classmethod
     def _email(cls, v: Optional[str]) -> Optional[str]:
-        if not v or not v.strip():
+        """En eller flera adresser, separerade med komma eller semikolon."""
+        addrs = [e for e in re.split(r"[,;\s]+", v or "") if e]
+        if not addrs:
             return None
-        v = v.strip()
-        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", v):
-            raise ValueError("Ogiltig e-postadress")
-        return v
+        for e in addrs:
+            if not _EMAIL_RE.fullmatch(e):
+                raise ValueError(f"Ogiltig e-postadress: {e}")
+        return ",".join(addrs)
 
     @model_validator(mode="after")
     def _channel(self):
@@ -139,6 +156,14 @@ def create_app(con=None, sos=None, sender=None, resolver=None, run_poller: bool 
     @app.get("/api/subscriptions")
     def list_():
         return db.list_subscriptions(con)
+
+    @app.post("/api/subscriptions/{sub_id}/emails")
+    def add_email(sub_id: int, body: EmailIn):
+        if not db.get_subscription(con, sub_id):
+            raise HTTPException(404, "Prenumerationen finns inte")
+        if not db.add_email(con, sub_id, body.email):
+            raise HTTPException(409, "Adressen finns redan på prenumerationen")
+        return db.get_subscription(con, sub_id)
 
     @app.delete("/api/subscriptions/{sub_id}", status_code=204)
     def delete(sub_id: int):

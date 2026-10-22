@@ -15,15 +15,21 @@ def _local(iso: str) -> datetime:
     return datetime.fromisoformat(iso).astimezone(STHLM)
 
 
+def _subscription_ids(con, email: str) -> List[int]:
+    return [r["id"] for r in con.execute("SELECT id, email FROM subscriptions")
+            if email.lower() in (e.lower() for e in db.split_emails(r["email"]))]
+
+
 def build_digest(con, email: str, since_iso: str, now: datetime):
     """Returnerar (ämne, brödtext) för en e-postadress, över alla dess fastigheter."""
+    sub_ids = _subscription_ids(con, email)
+    marks = ",".join("?" * len(sub_ids)) or "NULL"
     props = con.execute(
-        "SELECT p.id, p.name FROM properties p JOIN subscriptions s ON s.id = p.subscription_id "
-        "WHERE s.email = ? ORDER BY p.name", (email,)).fetchall()
+        f"SELECT id, name FROM properties WHERE subscription_id IN ({marks}) ORDER BY name", sub_ids).fetchall()
     alerts = con.execute(
-        "SELECT a.property_id, a.message FROM sent_alerts a "
-        "JOIN properties p ON p.id = a.property_id JOIN subscriptions s ON s.id = p.subscription_id "
-        "WHERE s.email = ? AND a.sent_at > ? ORDER BY a.sent_at", (email, since_iso)).fetchall()
+        f"SELECT a.property_id, a.message FROM sent_alerts a JOIN properties p ON p.id = a.property_id "
+        f"WHERE p.subscription_id IN ({marks}) AND a.sent_at > ? ORDER BY a.sent_at",
+        [*sub_ids, since_iso]).fetchall()
     by_prop: Dict[int, List[str]] = {}
     for a in alerts:
         by_prop.setdefault(a["property_id"], []).append(a["message"] or "(larmtext saknas)")
@@ -50,8 +56,8 @@ def send_due_digests(con, email_sender: EmailSender, now: Optional[datetime] = N
     today = local.date().isoformat()
     sent = 0
     with RUN_LOCK:
-        emails = [r["email"] for r in con.execute(
-            "SELECT DISTINCT email FROM subscriptions WHERE email != '' ORDER BY email")]
+        emails = sorted({e.lower() for r in con.execute("SELECT email FROM subscriptions")
+                         for e in db.split_emails(r["email"])})
         due = []
         for email in emails:
             row = con.execute("SELECT * FROM digests WHERE email = ?", (email,)).fetchone()

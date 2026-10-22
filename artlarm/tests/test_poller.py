@@ -327,3 +327,30 @@ def test_digest_failure_is_retried_and_phone_only_gets_none(con):
     assert digest.send_due_digests(con, mail, t) == 0
     mail.fail = False
     assert digest.send_due_digests(con, mail, t) == 1 and len(mail.sent) == 1
+
+
+def test_several_recipients_on_one_subscription(con):
+    sms, mail = LogSender(), LogEmailSender()
+    sid = db.add_subscription(con, "", "2026-09-01", [{"name": "Gården", "geometry": POLY}], email="a@b.se")
+    assert db.add_email(con, sid, "lars@x.se") and not db.add_email(con, sid, "LARS@x.se")
+    poller.poll_subscription(con, FakeSos([ob(1)]), Notifier(sms, mail),
+                             db.get_subscription(con, sid), date(2026, 10, 8))
+    assert sorted(m[0] for m in mail.sent) == ["a@b.se", "lars@x.se"]
+    # sammanfattning: ett mejl per adress
+    mail.sent.clear()
+    digest.send_due_digests(con, mail, datetime(2026, 10, 22, 14, 0, tzinfo=UTC))
+    con.execute("UPDATE sent_alerts SET sent_at = '2026-10-22T16:00:00+00:00'"); con.commit()
+    assert digest.send_due_digests(con, mail, datetime(2026, 10, 23, 8, 0, tzinfo=UTC)) == 2
+    assert sorted(m[0] for m in mail.sent) == ["a@b.se", "lars@x.se"] and "Storspov" in mail.sent[0][2]
+
+
+def test_api_add_email_and_validation(con):
+    client = TestClient(create_app(con, FakeSos([]), Notifier(LogSender()), run_poller=False))
+    r = client.post("/api/subscriptions", json={"email": "a@b.se, c@d.se", "start_date": "2026-09-01",
+                                                "properties": [{"name": "G", "geometry": POLY}]})
+    assert r.json()["email"] == "a@b.se,c@d.se"
+    sid = r.json()["id"]
+    assert client.post(f"/api/subscriptions/{sid}/emails", json={"email": "l@x.se"}).json()["email"] == "a@b.se,c@d.se,l@x.se"
+    assert client.post(f"/api/subscriptions/{sid}/emails", json={"email": "l@x.se"}).status_code == 409
+    assert client.post(f"/api/subscriptions/{sid}/emails", json={"email": "nej"}).status_code == 422
+    assert client.post("/api/subscriptions/99/emails", json={"email": "l@x.se"}).status_code == 404

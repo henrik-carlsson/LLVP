@@ -1,6 +1,7 @@
 """Skickar ett larm på alla kanaler (SMS och/eller e-post) som prenumerationen har."""
 from typing import Any, Dict, Optional
 
+import db
 from email_sender import EmailSender, default_email_sender
 from sms import SmsSender, default_sender
 
@@ -15,7 +16,8 @@ class Notifier:
         errors = []
         for send in (
             (lambda: self.sms.send(sub["phone"], message)) if sub.get("phone") and self.sms else None,
-            (lambda: self.email.send(sub["email"], subject, message)) if sub.get("email") and self.email else None,
+            *((lambda to=to: self.email.send(to, subject, message))
+              for to in (db.split_emails(sub.get("email", "")) if self.email else [])),
         ):
             if send:
                 try:
