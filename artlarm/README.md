@@ -19,7 +19,7 @@ export SMTP_HOST=... SMTP_USER=... SMTP_PASSWORD=... EMAIL_FROM=...   # e-post (
 - Larmtext: `Art, ÅÅÅÅ-MM-DD TT:MM, Fastighet. <länk till Artportalen>`.
 
 ## Kända begränsningar
-- **Fastighetsbeteckning → polygon är inte kopplad** (`fastighet.py`, `UnconfiguredResolver`); kräver Lantmäteriets API/avtal. Tills vidare anges GeoJSON-polygon.
-- SOS-adaptern (`sos.py`) är byggd efter dokumentationen på GitHub men är **ej provkörd mot live-API** (ingen nyckel). Verifiera bas-URL, `skip/take` och svarsfältet `totalCount`.
+- **Fastighetsbeteckning → polygon** slås upp mot Lantmäteriets OGC API (`LM_CONSUMER_KEY`/`LM_CONSUMER_SECRET`, Basic-auth). Format: `[Kommun] Trakt Block:Enhet`, t.ex. `Östra Storbyn 85:1`. Flertydiga beteckningar ger 409 med förslag på kommun. Utan nycklar anges GeoJSON direkt.
+- SOS-adaptern är provkörd live (sökning, MultiPolygon, 105 fynd för Östra Storbyn 85:1 sedan 2026-01-01). Sidindelning >1000 träffar och inkrementellt läge (`modifiedDate`) är ännu inte provade live.
 - "Realtid" = polling; SOS filtrerar på ändringsdatum per dygn, inte klockslag. Skyddade/sekretessbelagda arter kräver inloggning och ingår inte.
 - Ingen autentisering i webbgränssnittet/API:t – lägg bakom inloggning innan det exponeras.

@@ -75,7 +75,7 @@ def create_app(con=None, sos=None, sender=None, resolver=None, run_poller: bool 
     con = con or db.connect(config.DB_PATH)
     sos = sos or SosClient()
     sender = sender or default_notifier()
-    resolver = resolver or fastighet.UnconfiguredResolver()
+    resolver = resolver or fastighet.default_resolver()
 
     async def loop():
         while True:
@@ -109,6 +109,8 @@ def create_app(con=None, sos=None, sender=None, resolver=None, run_poller: bool 
                 props.append({"name": p.name, "geometry": fastighet.validate_geometry(geom)})
             except fastighet.ResolverNotConfigured as e:
                 raise HTTPException(501, str(e))
+            except fastighet.AmbiguousProperty as e:
+                raise HTTPException(409, str(e))
             except fastighet.PropertyNotFound:
                 raise HTTPException(404, f"Fastigheten '{p.designation}' hittades inte")
             except ValueError as e:

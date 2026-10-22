@@ -115,7 +115,8 @@ def test_parse_observation():
 
 def test_api_create_validates_and_backfills(con):
     sms = LogSender()
-    client = TestClient(create_app(con, FakeSos([ob(1)]), Notifier(sms), run_poller=False))
+    client = TestClient(create_app(con, FakeSos([ob(1)]), Notifier(sms),
+                                   resolver=fastighet.UnconfiguredResolver(), run_poller=False))
     r = client.post("/api/subscriptions", json={
         "phone": "070-123 45 67", "start_date": "2026-09-01",
         "properties": [{"name": "Gården", "geometry": POLY}]})
@@ -163,3 +164,67 @@ def test_non_artportalen_sources_link_to_their_own_url():
                            "event": {"startDate": "2026-09-10T00:00:00+02:00"},
                            "taxon": {"scientificName": "Sparassis crispa", "vernacularName": "blomkålssvamp"}})
     assert o.url == "https://www.artportalen.se/Sighting/136494510" and o.taxon == "Blomkålssvamp"
+
+
+# --- Lantmäteriet-uppslag (mockad HTTP) ---
+import httpx
+import fastighet
+
+
+def _feat(kommun, trakt, block, enhet, ref, coords):
+    return {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [coords]},
+            "properties": {"kommunnamn": kommun, "trakt": trakt, "block": block, "enhet": enhet,
+                           "registerenhetsreferens": ref}}
+
+
+SQ1 = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]
+SQ2 = [[1, 0], [1, 1], [2, 1], [2, 0], [1, 0]]
+
+
+def _resolver(db_features, calls):
+    def handler(req):
+        p = dict(req.url.params)
+        calls.append(p)
+        hit = [f for f in db_features
+               if f["properties"]["trakt"] == p.get("trakt") and f["properties"]["block"] == p.get("block")
+               and str(f["properties"]["enhet"]) == p.get("enhet")
+               and ("kommunnamn" not in p or f["properties"]["kommunnamn"] == p["kommunnamn"])]
+        return httpx.Response(200, json={"features": hit})
+    return fastighet.LantmaterietResolver(httpx.Client(transport=httpx.MockTransport(handler)))
+
+
+def test_parse_designation():
+    assert fastighet.parse_designation("Mora Östra Storbyn 85:1") == ("MORA ÖSTRA STORBYN", "85", 1)
+    assert fastighet.parse_designation("ÖSTRA_STORBYN_85_1") == ("ÖSTRA STORBYN", "85", 1)
+    with pytest.raises(ValueError):
+        fastighet.parse_designation("bara text")
+
+
+def test_resolver_merges_areas_and_handles_municipality_prefix():
+    feats = [_feat("MORA", "ÖSTRA STORBYN", "85", 1, "r1", SQ1), _feat("MORA", "ÖSTRA STORBYN", "85", 1, "r1", SQ2)]
+    g = _resolver(feats, []).resolve("Mora Östra Storbyn 85:1")
+    assert g["type"] == "Polygon"  # intilliggande områden slås ihop
+    assert _resolver(feats, []).resolve("östra storbyn 85:1")["type"] == "Polygon"
+
+
+def test_resolver_not_found_and_ambiguous():
+    r = _resolver([], [])
+    with pytest.raises(fastighet.PropertyNotFound):
+        r.resolve("Okänd 1:1")
+    feats = [_feat("MORA", "X", "1", 1, "a", SQ1), _feat("ORSA", "X", "1", 1, "b", SQ2)]
+    with pytest.raises(fastighet.AmbiguousProperty) as e:
+        _resolver(feats, []).resolve("X 1:1")
+    assert "Mora" in str(e.value) and "Orsa" in str(e.value)
+    assert _resolver(feats, []).resolve("Orsa X 1:1")["type"] == "Polygon"
+
+
+def test_api_designation_uses_resolver(con):
+    feats = [_feat("MORA", "ÖSTRA STORBYN", "85", 1, "r1", SQ1)]
+    sms = LogSender()
+    client = TestClient(create_app(con, FakeSos([ob(1)]), Notifier(sms),
+                                   resolver=_resolver(feats, []), run_poller=False))
+    base = {"phone": "070-123 45 67", "start_date": "2026-09-01"}
+    r = client.post("/api/subscriptions", json={**base, "properties": [{"name": "G", "designation": "Östra Storbyn 85:1"}]})
+    assert r.status_code == 201 and len(sms.sent) == 1
+    r = client.post("/api/subscriptions", json={**base, "properties": [{"name": "G", "designation": "Saknas 1:1"}]})
+    assert r.status_code == 404

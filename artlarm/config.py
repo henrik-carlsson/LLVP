@@ -24,6 +24,13 @@ ELKS_USER = os.environ.get("ELKS_USER", "")
 ELKS_PASSWORD = os.environ.get("ELKS_PASSWORD", "")
 SMS_SENDER = os.environ.get("SMS_SENDER", "Artlarm")  # max 11 tecken
 
+# Lantmäteriets OGC API Features (fastighetsindelning), Basic-autentisering.
+LM_BASE_URL = os.environ.get(
+    "LM_BASE_URL", "https://api.lantmateriet.se/ogc-features/v1/fastighetsindelning"
+)
+LM_CONSUMER_KEY = os.environ.get("LM_CONSUMER_KEY", "")
+LM_CONSUMER_SECRET = os.environ.get("LM_CONSUMER_SECRET", "")
+
 # E-post via SMTP. Utan SMTP_HOST loggas e-post bara (torrkörning).
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))  # STARTTLS
