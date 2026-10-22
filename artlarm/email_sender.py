@@ -28,8 +28,12 @@ class SmtpSender(EmailSender):
         msg = EmailMessage()
         msg["From"], msg["To"], msg["Subject"] = config.EMAIL_FROM, to, subject
         msg.set_content(body)
-        with smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT, timeout=30) as s:
-            s.starttls()
+        if config.SMTP_PORT == 465:  # implicit SSL
+            smtp = smtplib.SMTP_SSL(config.SMTP_HOST, config.SMTP_PORT, timeout=30)
+        else:  # STARTTLS
+            smtp = smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT, timeout=30)
+            smtp.starttls()
+        with smtp as s:
             if config.SMTP_USER:
                 s.login(config.SMTP_USER, config.SMTP_PASSWORD)
             s.send_message(msg)
