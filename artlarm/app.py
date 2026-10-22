@@ -13,6 +13,7 @@ from pydantic import BaseModel, field_validator, model_validator
 import config
 import db
 import fastighet
+import digest
 import poller
 from notify import default_notifier
 from sos import SosClient
@@ -85,12 +86,26 @@ def create_app(con=None, sos=None, sender=None, resolver=None, run_poller: bool 
                 log.exception("Pollning misslyckades")
             await asyncio.sleep(config.POLL_SECONDS)
 
+    async def digest_loop():
+        while True:
+            try:
+                await asyncio.to_thread(
+                    digest.send_due_digests, con, sender.email,
+                    before_send=lambda: poller.poll_all(con, sos, sender))
+            except Exception:
+                log.exception("Dygnssammanfattning misslyckades")
+            await asyncio.sleep(60)
+
     @asynccontextmanager
     async def lifespan(_):
-        task = asyncio.create_task(loop()) if run_poller else None
+        tasks = []
+        if run_poller:
+            tasks.append(asyncio.create_task(loop()))
+            if config.DIGEST_ENABLED and sender.email:
+                tasks.append(asyncio.create_task(digest_loop()))
         yield
-        if task:
-            task.cancel()
+        for t in tasks:
+            t.cancel()
 
     app = FastAPI(title="Artlarm", lifespan=lifespan)
 

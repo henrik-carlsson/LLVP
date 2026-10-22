@@ -23,7 +23,13 @@ CREATE TABLE IF NOT EXISTS sent_alerts (
   property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
   occurrence_id TEXT NOT NULL,
   sent_at TEXT NOT NULL,
+  message TEXT,                      -- larmtexten, används i dygnssammanfattningen
   PRIMARY KEY (property_id, occurrence_id)
+);
+CREATE TABLE IF NOT EXISTS digests (
+  email TEXT PRIMARY KEY,
+  last_sent_at TEXT NOT NULL,        -- sammanfattningen täcker larm skickade efter detta
+  last_date TEXT NOT NULL            -- svenskt datum då den senast skickades
 );
 """
 
@@ -37,6 +43,8 @@ def connect(path: str) -> sqlite3.Connection:
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
     con.executescript(SCHEMA)
+    if "message" not in {r["name"] for r in con.execute("PRAGMA table_info(sent_alerts)")}:
+        con.execute("ALTER TABLE sent_alerts ADD COLUMN message TEXT")
     if "email" not in {r["name"] for r in con.execute("PRAGMA table_info(subscriptions)")}:
         con.execute("ALTER TABLE subscriptions ADD COLUMN email TEXT NOT NULL DEFAULT ''")
     return con
@@ -103,9 +111,10 @@ def already_sent(con, property_id: int, occurrence_id: str) -> bool:
     ).fetchone() is not None
 
 
-def mark_sent(con, property_id: int, occurrence_id: str) -> None:
+def mark_sent(con, property_id: int, occurrence_id: str, message: Optional[str] = None) -> None:
     con.execute(
-        "INSERT OR IGNORE INTO sent_alerts (property_id, occurrence_id, sent_at) VALUES (?, ?, ?)",
-        (property_id, occurrence_id, now_iso()),
+        "INSERT OR IGNORE INTO sent_alerts (property_id, occurrence_id, sent_at, message) "
+        "VALUES (?, ?, ?, ?)",
+        (property_id, occurrence_id, now_iso(), message),
     )
     con.commit()

@@ -268,3 +268,62 @@ def test_marked_alert_reaches_email_subject(con):
                              db.get_subscription(con, sid), date(2026, 10, 8))
     to, subject, body = mail.sent[0]
     assert subject.startswith("Artlarm (osäkert läge):") and "OSÄKERT LÄGE" in body
+
+
+# --- Dygnssammanfattning ---
+import digest
+from datetime import timezone as _tz
+
+UTC = _tz.utc
+
+
+def _mail_db(con, emails_props):
+    for email, names in emails_props:
+        db.add_subscription(con, "", "2026-01-01",
+                            [{"name": n, "geometry": POLY} for n in names], email=email)
+
+
+def test_digest_one_mail_per_address_even_with_several_subscriptions(con):
+    _mail_db(con, [("a@b.se", ["Gård A"]), ("a@b.se", ["Gård B"]), ("c@d.se", ["Gård C"])])
+    mail = LogEmailSender()
+    # Dag 1: adresserna seedas, inget skickas
+    day1 = datetime(2026, 10, 22, 14, 0, tzinfo=UTC)
+    assert digest.send_due_digests(con, mail, day1) == 0
+    # Larm skickas under dygnet
+    db.mark_sent(con, 1, "x1", "Storspov, 2026-10-22 10:00, Gård A. https://x/1")
+    con.execute("UPDATE sent_alerts SET sent_at = '2026-10-22T16:00:00+00:00'"); con.commit()
+    # Före 09:00 svensk tid: inget
+    assert digest.send_due_digests(con, mail, datetime(2026, 10, 23, 6, 30, tzinfo=UTC)) == 0  # 08:30 svensk tid
+    # 09:00 svensk tid (07:00 UTC, sommartid slut → 08:00 UTC): skickas, ett per adress
+    now = datetime(2026, 10, 23, 8, 0, tzinfo=UTC)
+    assert digest.send_due_digests(con, mail, now) == 2
+    to = {m[0]: m for m in mail.sent}
+    assert set(to) == {"a@b.se", "c@d.se"}
+    _, subj, body = to["a@b.se"]
+    assert "1 ny observation" in subj and "Gård A: 1 nya" in body and "Storspov" in body and "Gård B: inga nya" in body
+    assert "inga nya observationer" in to["c@d.se"][1]
+    # inte två gånger samma dag
+    assert digest.send_due_digests(con, mail, datetime(2026, 10, 23, 12, 0, tzinfo=UTC)) == 0
+    # nästa dag skickas även om inget registrerats
+    assert digest.send_due_digests(con, mail, datetime(2026, 10, 24, 8, 0, tzinfo=UTC)) == 2
+    assert "inga nya observationer" in mail.sent[-1][1] and "Storspov" not in mail.sent[-1][2]
+
+
+def test_digest_failure_is_retried_and_phone_only_gets_none(con):
+    _mail_db(con, [("a@b.se", ["Gård A"])])
+    db.add_subscription(con, "+46701234567", "2026-01-01", [{"name": "P", "geometry": POLY}])
+
+    class Flaky(LogEmailSender):
+        fail = True
+
+        def send(self, *a):
+            if self.fail:
+                raise RuntimeError("nere")
+            super().send(*a)
+
+    mail = Flaky()
+    digest.send_due_digests(con, mail, datetime(2026, 10, 22, 14, 0, tzinfo=UTC))
+    t = datetime(2026, 10, 23, 8, 0, tzinfo=UTC)
+    assert digest.send_due_digests(con, mail, t) == 0
+    mail.fail = False
+    assert digest.send_due_digests(con, mail, t) == 1 and len(mail.sent) == 1

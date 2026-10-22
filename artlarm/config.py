@@ -43,6 +43,10 @@ EMAIL_FROM = os.environ.get("EMAIL_FROM", "artlarm@localhost")
 CONSIDER_ACCURACY = os.environ.get("ARTLARM_CONSIDER_ACCURACY", "1") != "0"
 MAX_UNCERTAINTY_M = float(os.environ.get("ARTLARM_MAX_UNCERTAINTY_M", "500"))
 
+# Dygnssammanfattning per e-postadress, skickas första gången efter kl DIGEST_HOUR (svensk tid).
+DIGEST_ENABLED = os.environ.get("ARTLARM_DIGEST", "1") != "0"
+DIGEST_HOUR = int(os.environ.get("ARTLARM_DIGEST_HOUR", "9"))
+
 # Max antal enskilda SMS per fastighet och körning; resten sammanfattas i ett SMS.
 MAX_SMS_PER_RUN = int(os.environ.get("ARTLARM_MAX_SMS_PER_RUN", "20"))
 

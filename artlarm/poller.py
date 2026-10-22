@@ -1,5 +1,6 @@
 """Kärnlogik: hitta nya observationer per fastighet och skicka larm."""
 import logging
+import threading
 from dataclasses import replace
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
@@ -16,6 +17,7 @@ from sos import Observation, SosClient
 
 log = logging.getLogger("artlarm.poller")
 STHLM = ZoneInfo("Europe/Stockholm")
+RUN_LOCK = threading.RLock()  # SQLite-anslutningen delas av timloop, sammanfattning och API-anrop
 _TO_SWEREF = Transformer.from_crs("EPSG:4326", "EPSG:3006", always_xy=True).transform
 
 
@@ -88,10 +90,11 @@ def poll_property(con, sos: SosClient, sender: Notifier, sub: Dict[str, Any],
                         f"{start} (enskilda larm skickas för de {len(individual)} senaste).",
                         f"Artlarm: äldre observationer – {prop['name']}")
             for o in overflow:
-                db.mark_sent(con, prop["id"], o.occurrence_id)
+                db.mark_sent(con, prop["id"], o.occurrence_id, format_alert(o, prop["name"]))
         for o in individual:
-            sender.send(sub, format_alert(o, prop["name"]), f"Artlarm{' (osäkert läge)' if o.location_note else ''}: {o.taxon} – {prop['name']}")
-            db.mark_sent(con, prop["id"], o.occurrence_id)
+            text = format_alert(o, prop["name"])
+            sender.send(sub, text, f"Artlarm{' (osäkert läge)' if o.location_note else ''}: {o.taxon} – {prop['name']}")
+            db.mark_sent(con, prop["id"], o.occurrence_id, text)
     except Exception:
         log.exception("SMS-utskick misslyckades för fastighet %s; försöker igen nästa körning", prop["id"])
         return 0  # last_polled_at sätts inte → nästa körning gör om bakåtblicken, dedupen skyddar mot dubbletter
@@ -103,11 +106,12 @@ def poll_property(con, sos: SosClient, sender: Notifier, sub: Dict[str, Any],
 def poll_subscription(con, sos: SosClient, sender: Notifier, sub: Dict[str, Any],
                       today: Optional[date] = None) -> int:
     total = 0
-    for prop in sub["properties"]:
-        try:
-            total += poll_property(con, sos, sender, sub, prop, today)
-        except Exception:
-            log.exception("Kunde inte polla fastighet %s", prop["id"])
+    with RUN_LOCK:
+        for prop in sub["properties"]:
+            try:
+                total += poll_property(con, sos, sender, sub, prop, today)
+            except Exception:
+                log.exception("Kunde inte polla fastighet %s", prop["id"])
     return total
 
 
