@@ -1,207 +1,46 @@
 {
-  "created": "2026-10-24T15:04:52.293918+02:00",
+  "created": "2026-10-25T14:04:51.722487+01:00",
   "dry_run": true,
   "schedule": [
     {
-      "start": "2026-10-24T15:00:00+02:00",
-      "end": "2026-10-26T00:00:00+01:00",
+      "start": "2026-10-25T14:00:00+01:00",
+      "end": "2026-10-27T00:00:00+01:00",
       "setpoint_c": 14.0
     }
   ],
   "hours": [
     {
-      "hour": "2026-10-24T15:00:00+02:00",
-      "price_sek_per_kwh": 0.31,
-      "outdoor_c": 7.9,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T16:00:00+02:00",
-      "price_sek_per_kwh": 0.33,
-      "outdoor_c": 8.3,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T17:00:00+02:00",
-      "price_sek_per_kwh": 0.423,
-      "outdoor_c": 8.5,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T18:00:00+02:00",
-      "price_sek_per_kwh": 0.417,
-      "outdoor_c": 8.7,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T19:00:00+02:00",
-      "price_sek_per_kwh": 0.334,
-      "outdoor_c": 8.9,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T20:00:00+02:00",
-      "price_sek_per_kwh": 0.209,
-      "outdoor_c": 9.1,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T21:00:00+02:00",
-      "price_sek_per_kwh": 0.1,
-      "outdoor_c": 9.4,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T22:00:00+02:00",
-      "price_sek_per_kwh": 0.07,
-      "outdoor_c": 9.0,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-24T23:00:00+02:00",
-      "price_sek_per_kwh": 0.034,
-      "outdoor_c": 9.0,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T00:00:00+02:00",
-      "price_sek_per_kwh": 0.026,
-      "outdoor_c": 8.8,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T01:00:00+02:00",
-      "price_sek_per_kwh": 0.012,
-      "outdoor_c": 8.3,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T02:00:00+02:00",
-      "price_sek_per_kwh": -0.003,
-      "outdoor_c": 8.1,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T03:00:00+01:00",
-      "price_sek_per_kwh": -0.006,
-      "outdoor_c": 8.0,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T04:00:00+01:00",
-      "price_sek_per_kwh": -0.006,
-      "outdoor_c": 8.2,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T05:00:00+01:00",
-      "price_sek_per_kwh": -0.005,
-      "outdoor_c": 8.3,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T06:00:00+01:00",
-      "price_sek_per_kwh": -0.007,
-      "outdoor_c": 8.4,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T07:00:00+01:00",
-      "price_sek_per_kwh": -0.004,
-      "outdoor_c": 8.5,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T08:00:00+01:00",
-      "price_sek_per_kwh": -0.0,
-      "outdoor_c": 8.5,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T09:00:00+01:00",
-      "price_sek_per_kwh": -0.0,
-      "outdoor_c": 8.6,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T10:00:00+01:00",
-      "price_sek_per_kwh": 0.0,
-      "outdoor_c": 8.7,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T11:00:00+01:00",
-      "price_sek_per_kwh": 0.007,
-      "outdoor_c": 8.4,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T12:00:00+01:00",
-      "price_sek_per_kwh": 0.012,
-      "outdoor_c": 8.3,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
-      "hour": "2026-10-25T13:00:00+01:00",
-      "price_sek_per_kwh": 0.023,
-      "outdoor_c": 7.5,
-      "setpoint_c": 14.0,
-      "reason": "små prisskillnader"
-    },
-    {
       "hour": "2026-10-25T14:00:00+01:00",
       "price_sek_per_kwh": 0.036,
-      "outdoor_c": 7.1,
+      "outdoor_c": 6.9,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     },
     {
       "hour": "2026-10-25T15:00:00+01:00",
       "price_sek_per_kwh": 0.039,
-      "outdoor_c": 6.9,
+      "outdoor_c": 6.7,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     },
     {
       "hour": "2026-10-25T16:00:00+01:00",
       "price_sek_per_kwh": 0.056,
-      "outdoor_c": 6.8,
+      "outdoor_c": 6.6,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     },
     {
       "hour": "2026-10-25T17:00:00+01:00",
       "price_sek_per_kwh": 0.111,
-      "outdoor_c": 6.7,
+      "outdoor_c": 6.6,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     },
     {
       "hour": "2026-10-25T18:00:00+01:00",
       "price_sek_per_kwh": 0.046,
-      "outdoor_c": 6.7,
+      "outdoor_c": 6.6,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     },
@@ -236,7 +75,175 @@
     {
       "hour": "2026-10-25T23:00:00+01:00",
       "price_sek_per_kwh": 0.026,
+      "outdoor_c": 7.2,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T00:00:00+01:00",
+      "price_sek_per_kwh": 0.006,
+      "outdoor_c": 7.2,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T01:00:00+01:00",
+      "price_sek_per_kwh": 0.003,
       "outdoor_c": 7.4,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T02:00:00+01:00",
+      "price_sek_per_kwh": 0.007,
+      "outdoor_c": 7.7,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T03:00:00+01:00",
+      "price_sek_per_kwh": 0.007,
+      "outdoor_c": 8.1,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T04:00:00+01:00",
+      "price_sek_per_kwh": 0.012,
+      "outdoor_c": 8.3,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T05:00:00+01:00",
+      "price_sek_per_kwh": 0.003,
+      "outdoor_c": 8.4,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T06:00:00+01:00",
+      "price_sek_per_kwh": -0.004,
+      "outdoor_c": 8.6,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T07:00:00+01:00",
+      "price_sek_per_kwh": 0.014,
+      "outdoor_c": 8.5,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T08:00:00+01:00",
+      "price_sek_per_kwh": 0.04,
+      "outdoor_c": 8.4,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T09:00:00+01:00",
+      "price_sek_per_kwh": 0.072,
+      "outdoor_c": 8.6,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T10:00:00+01:00",
+      "price_sek_per_kwh": 0.071,
+      "outdoor_c": 8.7,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T11:00:00+01:00",
+      "price_sek_per_kwh": 0.077,
+      "outdoor_c": 8.8,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T12:00:00+01:00",
+      "price_sek_per_kwh": 0.08,
+      "outdoor_c": 8.7,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T13:00:00+01:00",
+      "price_sek_per_kwh": 0.068,
+      "outdoor_c": 9.1,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T14:00:00+01:00",
+      "price_sek_per_kwh": 0.087,
+      "outdoor_c": 9.4,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T15:00:00+01:00",
+      "price_sek_per_kwh": 0.098,
+      "outdoor_c": 9.5,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T16:00:00+01:00",
+      "price_sek_per_kwh": 0.126,
+      "outdoor_c": 9.1,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T17:00:00+01:00",
+      "price_sek_per_kwh": 0.212,
+      "outdoor_c": 7.8,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T18:00:00+01:00",
+      "price_sek_per_kwh": 0.355,
+      "outdoor_c": 7.1,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T19:00:00+01:00",
+      "price_sek_per_kwh": 0.464,
+      "outdoor_c": 6.9,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T20:00:00+01:00",
+      "price_sek_per_kwh": 0.394,
+      "outdoor_c": 6.2,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T21:00:00+01:00",
+      "price_sek_per_kwh": 0.226,
+      "outdoor_c": 6.0,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T22:00:00+01:00",
+      "price_sek_per_kwh": 0.192,
+      "outdoor_c": 5.6,
+      "setpoint_c": 14.0,
+      "reason": "små prisskillnader"
+    },
+    {
+      "hour": "2026-10-26T23:00:00+01:00",
+      "price_sek_per_kwh": 0.16,
+      "outdoor_c": 5.4,
       "setpoint_c": 14.0,
       "reason": "små prisskillnader"
     }
