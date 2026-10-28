@@ -46,7 +46,7 @@ Primära kunder är skogsägare, skogsförvaltare och naturvårds- eller miljöh
 Första versionen omfattar allt i avsnitt 5 och 6, drift enligt avsnitt 8 och datakällorna i avsnitt 7. Följande ingår inte (förslag att bekräfta):
 
 - **SMS-notiser.** Prototypen stöder det, men kraven ger varken pris eller kostnadstäckning för det; beslutat att utelämna i version 1.
-- **Skyddade och sekretessbelagda artfynd.** De kräver inloggning hos Artdatabanken och finns inte i det öppna API:t.
+- **Skyddade och sekretessbelagda artfynd.** Fynd som Artdatabanken har dolt eller generaliserat kräver behörighet hos Artdatabanken och ger inget eller bara osäkert notis. Arter med skyddsnivå kan ge notis när det enskilda fyndet är öppet.
 - **Återbetalning.**
 - **Mobilapp, webbapp med karta och push-notiser (se avsnitt 15 om framtida utökningar).**
 
@@ -154,7 +154,7 @@ Notiser skickas för publika artobservationer i Artdatabankens SOS som ligger in
 | O2 | Observationens position ligger inom bevakad yta, eller strax utanför så att positionens osäkerhet gör att den kan ligga innanför (högst 500 m osäkerhet). Det senare ger notis med markeringen "osäkert läge" (L3). |
 | O3 | Alla arter och artgrupper ingår: växter, djur, svampar, lavar och mossor, både vanliga och sällsynta. Det finns inget artfilter i version 1. |
 | O4 | Alla källor i SOS ingår, med förbehåll för licensfiltret (L6). Alla verifieringsstatusar ingår, både verifierade och ej verifierade fynd. |
-| O5 | Skyddade och sekretessbelagda fynd ingår inte, eftersom de inte finns i det öppna API:et. |
+| O5 | Skyddade och sekretessbelagda fynd som Artdatabanken har dolt eller generaliserat ger inget eller bara osäkert notis, eftersom det öppna API:et inte lämnar ut dem med full position. Arter med skyddsnivå ger notis när det enskilda fyndet är öppet. |
 | O6 | En observation ger notis högst en gång per bevakning (L4). Ändras eller tas en observation bort hos källan efter notisen skickas ingen ny notis. |
 | O7 | Observationer som saknar koordinater men ändå träffas av SOS urval ger notis utan markering (prototypens beteende). |
 | O8 | Kontrollen fortsätter 14 dagar efter slutdatum för observationer som är daterade inom perioden men rapporteras senare. Observationer daterade före startdatum ger aldrig notis, även om de rapporteras senare. De 14 dagarna påverkar inte priset. |
@@ -263,7 +263,7 @@ Innan tjänsten tas betalt för behöver följande kläras av jurist; punkterna 
 | Villkor och återbetalning | Ingen återbetalning när en bevakning tas bort. Kunden informeras vid köp och vid borttagning och bekräftar (H2, B8). Om konsumenter ska kunna köpa måste ångerrätt vid distansköp och samtycke till direkt påbörjad tjänst hanteras; om tjänsten riktas till företag och yrkesutförare kan det förenklas. Beslut: tjänsten säljs till företag och yrkesutförare, vilket förenklar konsumentreglerna; köparen intygar med en ruta och anger organisationsnummer vid köp (B10). |
 | Moms och bokföring | Moms på tjänsten (förmodligen 25 %), kvitto/faktura enligt kraven, och lagring av transaktionsunderlag enligt bokföringslagen, vilket begränsar radering av ett konto (K6). |
 | Datalicenser | Artdatabankens villkor, licenser per datakälla i SOS (iNaturalist-observatörer väljer licens per observation och den följer med i SOS-datat; i ett stickprov kring Uppsala (14 230 observationer sedan 2026-01-01) hade 1 952 av 2 560 iNaturalist-observationer licensen cc-by-nc, som utesluter kommersiell användning, medan Artportalens fynd anges som "Free usage" utan uttalad licens), Lantmäteriets villkor för kommersiell tjänst och avverkningsanmälans licens (Skogsstyrelsen: CC0, klarlagd). Notiserna visar art, tid, ungefärligt läge och länk, inte bilder. Frågor till juristen: (1) räknas notisens innehåll som användning av licensierat material, (2) gäller "icke-kommersiell" en betald tjänst som bara visar fakta och länk, och (3) ger Artdatabankens villkor för SOS rätt till kommersiell användning av alla källor. |
-| Skyddade arter | Skyddade fynd finns inte i det öppna API:t och ger alltså inte notis; detta ska framgå i villkoren så att tjänsten inte läses som en fullständig garanti. |
+| Skyddade arter | Fynd som Artdatabanken har dolt eller generaliserat ger inget eller bara osäkert notis, medan öppna fynd av skyddade arter ger notis; detta ska framgå i villkoren så att tjänsten inte läses som en fullständig garanti. |
 | Ansvar | Notiserna är information från tredje part och kan vara försenade, ofullständiga eller ha osäkert läge. Villkoren ska innehålla ansvarsbegränsning. Ingen ägarkontroll görs av fastigheter i version 1; villkoren lägger ansvaret på kunden (juristen bekräftar). |
 | Cookies | Endast nödvändiga cookies för inloggning i första versionen, så att ingen samtyckesbanner behövs (förslag). Det gäller så länge reklamen inte använder tredjepartsskript eller spårning (avsnitt 16). |
 
@@ -446,7 +446,7 @@ Villkoren är allmänna villkor för en webbtjänst (inte en EULA för installer
 
 1. **Parter och tjänst.** \[Bolaget\] levererar en webbtjänst som skickar notiser per e-post när en artobservation görs på en bevakad fastighet. Tjänsten riktar sig endast till företag och yrkesutövare; kunden intygar vid köp att köpet sker i näringsverksamhet.
 2. **Konto.** Ett konto har en e-postadress. Notiser och sammanfattningar skickas bara dit. Kunden ansvarar för sin inloggning och får inte dela kontot.
-3. **Bevakning och notiser.** En bevakning gäller valda fastigheter, ytor och en period. Notiser bygger på tredje parts data (Artdatabanken med Artportalen, iNaturalist m.fl., samt Skogsstyrelsens öppna data) och kan vara försenade, ofullständiga eller ha osäkert läge. Avverkningsdata uppdateras ca en gång per natt. Skyddade arter ingår inte. Inga garantier ges för att alla observationer ger notis. Kunden ansvarar för att hen har rätt att bevaka fastigheten; notiserna bygger på offentliga data och ingen ägarkontroll görs.
+3. **Bevakning och notiser.** En bevakning gäller valda fastigheter, ytor och en period. Notiser bygger på tredje parts data (Artdatabanken med Artportalen, iNaturalist m.fl., samt Skogsstyrelsens öppna data) och kan vara försenade, ofullständiga eller ha osäkert läge. Avverkningsdata uppdateras ca en gång per natt. Fynd som Artdatabanken har dolt eller generaliserat ingår inte eller får osäkert läge. Inga garantier ges för att alla observationer ger notis. Kunden ansvarar för att hen har rätt att bevaka fastigheten; notiserna bygger på offentliga data och ingen ägarkontroll görs.
 4. **Pris och betalning.** Priset visas före köp, exklusive moms, och räknas som hektar × dagar × grundpris. Betalning görs i förskott via betalningsleverantör. Priset vid köp gäller. Per köp finns ett beloppstak; över taket kontaktar kunden supporten.
 5. **Ingen återbetalning.** När en bevakning tas bort eller ett konto avslutas sker ingen återbetalning för återstående period. Om felet ligger hos tjänsten gör supporten en manuell bedömning.
 6. **Ansvar.** \[Bolaget\] ansvarar inte för indirekta skador eller utebliven vinst, och ansvaret är begränsat till det belopp kunden betalat för den aktuella bevakningen (juristen avgör nivån).
