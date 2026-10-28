@@ -488,6 +488,22 @@ En mobilapp eller mobilanpassad webbapp skulle kunna visa observationerna på en
 
 Version 1 har e-post och lösenord med verifiering och återställning. Möjliga utbyggnader: valfri tvåfaktor för kunder (administratörer har det redan) och BankID. BankID kräver avtal och kostar per inloggning, och tas upp när tjänsten har kunder som efterfrågar det.
 
+### 15.3 Företagsavtal (enterprise)
+
+Större organisationer, till exempel skogsbolag, kommuner, försäkringsbolag och naturvårdsorganisationer, kan i stället för varukorgen köpa ett årsavtal med en fast årsavgift upp till en total areal. Avtalet säljs och sätts upp manuellt av en administratör; självbetjäning är en senare utbyggnad. Inget av detta ingår i version 1.
+
+| Del | Förslag |
+| --- | --- |
+| Prismodell | Fast årsavgift per nivå som ger en total areal. Arealen är den samlade bevakade ytan som är aktiv samtidigt; överlappande ytor räknas en gång. Listpriset 2 kr per hektar och dag motsvarar 730 kr per hektar och år, och nivåerna ger volymrabatt på det. |
+| Exempel på nivåer (ej beslutade) | 1 000 ha: 40 % rabatt, 438 000 kr per år. 10 000 ha: 55 % rabatt, 3 285 000 kr per år. 100 000 ha: 70 % rabatt, 21 900 000 kr per år. Alla belopp exklusive moms. Nivåerna ska prövas mot pilotkunder. |
+| Över taket | Bevakning av yta över årsavtalets areal kräver att kunden går upp en nivå; ytan blockeras tills dess, och kunden varnas vid 80 och 100 % av arealen. |
+| Vad som bevakas | Fastighetslistor som fil eller API, och även hela kommuner, län eller ritade ytor. Med avverkningsanmälningar som filter kan en organisation följa all anmäld avverkning inom sitt område. |
+| Mottagare och användare | Flera användare och mottagare per organisation samt notiser som webhook eller API, utöver mejl. Eftersom tjänsten då lagrar fler personers uppgifter åt kunden krävs ett personuppgiftsbiträdesavtal; det tas inte med i version 1, där kontot bara har en mottagare. |
+| Betalning | Faktura via Stripe Invoicing med 30 dagars betalvillkor och bankbetalning, inte kort. Fakturan skapas när administratören aktiverar avtalet. |
+| Avtal | Eget företagsavtal i stället för standardvillkoren: 12 månader, förnyelse och uppsägningstid, servicenivå för support, och en klausul om att observationerna kommer från tredje part (jfr avsnitt 9). |
+| Rapporter | Månadsrapport per organisation: antal notiser, arealer och användning av avtalets areal. |
+| Påverkan på modellen | Ny typ av bevakning (område i stället för fastighet) och ett nytt begrepp, företagsavtal, i glossariet. Prismodellen och områdesbevakningen bör beslutas i en ADR innan bygget. |
+
 ## 16. Reklam på webbsidan (förslag)
 
 Webbsidan förbereds för reklam genom fasta annonsplatser och ett administrationsstöd, men reklamen är avstängd tills ett beslut tas. Förslaget håller reklamen utanför allt som rör pengar, villkor och notiser, och börjar med direktsålda annonser utan spårning så att ingen samtyckesbanner behövs.
