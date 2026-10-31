@@ -260,6 +260,7 @@ Tjänsten ska drivas på egen server eller i en molntjänst, till exempel AWS, o
 | D14 | Betalning | Innan driftsatt på AWS används Stripe i testläge med testnycklar och Stripes testkort, och Stripes kommandoradsverktyg vidarebefordrar webhooks till den lokala tjänsten. Skiftet mellan simulerad betalning, testläge och skarpt läge sker bara via konfiguration. |
 | D15 | Säkerhet | Simulerad betalning och mejlfångaren kan inte slås på i produktionsläge: tjänsten vägrar starta om skarpa Stripe-nycklar och simulerad betalning är påslagna samtidigt, och ett tydligt märke visas på alla sidor när betalningen är simulerad. |
 | D16 | Lokal provning | Lokalt kan tjänstens klocka ställas fram, så att kontrollen var 15:e minut, sammanfattningen kl 09:00, periodens slut, de 14 dagarna efter slutdatum och varukorgens 7 dagar går att pröva utan att vänta. Mot Artdatabanken, Lantmäteriet och Skogsstyrelsen används de riktiga tjänsterna med nycklar i en lokal .env-fil som inte checkas in; för tester finns inspelade svar så att de går utan nät och nycklar. Lokal seed-data har två exempelfastigheter (Mora Oxberg 95:1 och Östra Storbyn 85:1), ett testkonto och en testadministratör med fast tvåfaktorkod som bara gäller lokalt. |
+| D17 | Gränssnitt | Webbgränssnittet ska fungera på mobil, iPad och dator i vanliga webbläsare, från en skärmbredd på ca 375 px: responsiv layout, tabeller och datumfält per rad som staplas på smal skärm, och tryckytor som går att träffa med fingret (minst 44 px, förslag). Kassan (Stripe Checkout) och mejlens länkar ska fungera i mobilens webbläsare. Samma funktioner finns på alla enheter. |
 
 ## 9. Juridik, integritet och villkor
 
@@ -317,6 +318,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | D12–D15 | Med ett kommando startar hela tjänsten lokalt, och ett simulerat köp av en bevakning ger en aktiv bevakning, en faktura och ett mejl i mejlfångaren. En misslyckad simulerad betalning aktiverar ingenting. Skarpa Stripe-nycklar tillsammans med simulerad betalning stoppar starten. |
 | P17, P18 | Med två avverkningsanmälningar med olika perioder ger ett fynd inom den ena radens yta men utanför dess period ingen notis, och ett fynd inom en annan rads period ger notis med rätt ärendenummer. Priset och fakturan har en rad per anmälan, även när ytorna överlappar. En utgången rad bevakas inte längre medan övriga rader fortsätter, och bevakningen visas som delvis utgången. |
 | B18–B21, A8–A10 | Med ett erbjudande på 20 % till ett visst klockslag får ett köp i kassan före klockslaget 20 % rabatt och ett köp efter det ingen. En kassa som öppnats före sluttiden behåller rabatten vid betalning efter sluttiden, inom kassans giltighet. En kund med ett nytt organisationsnummer får förstagångsrabatten på sitt första betalda köp men inte på det andra. Med erbjudande 20 %, förstagångsrabatt 30 % och rabattkod 10 % får köpet bara 30 % rabatt, och en rabattkod som ger mindre rabatt än den som gäller ger ett meddelande. Fakturan visar rabattens namn och procent. |
+| D17 | Registrering, ny bevakning med flera rader, varukorg, betalning och Mina bevakningar går att genomföra på en mobil (375 px bred) och på en iPad utan sidledes rullning och med alla knappar och fält nåbara med fingret. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -385,6 +387,7 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 45. Erbjudande för alla | Tidsbegränsad procentuell rabatt utan kod som gäller alla kunder automatiskt, skapad av en administratör; högst ett aktivt åt gången. | B18, A8, A10 |
 | 46. Förstagångsrabatt | Procentuell rabatt på ett organisationsnummers första genomförda köp, på och av och med ändringsbar procent. | B19, A9 |
 | 47. En rabatt per köp | Bara den rabatt som ger lägst pris gäller; erbjudande, förstagångsrabatt och rabattkod kombineras inte. | B20, B21 |
+| 48. Mobil och iPad i webbläsaren | Version 1 har ett responsivt webbgränssnitt för mobil, iPad och dator; webbapp på hemskärmen och egen app är framtida utökningar. | D17 |
 
 **Kvarstående frågor**
 
@@ -501,6 +504,13 @@ En mobilapp eller mobilanpassad webbapp skulle kunna visa observationerna på en
 - **Hur den hänger ihop med det som byggs nu:** bevakningar, konton och betalning ingår redan, och appen skulle läsa samma data. Notiserna sparar redan observationens id och text, och prototypen hämtar koordinater och osäkerhet, men de sparas inte per notis i dag.
 - **Sannolikt behov:** kartunderlag och dess villkor, inloggning i appen, push-notiser som komplement till e-post, samt beslut om appen ska kräva egen betalning eller ingå i bevakningen.
 - **Frågor för senare:** webbapp eller native app, kartleverantör, om offline-läge behövs i fält där täckningen är dålig, och hur positionsdata för känsliga arter ska hanteras.
+
+**Mobil och iPad i tre nivåer.**
+
+- **Nivå 1, mobil- och iPad-anpassad webb (version 1, D17):** samma tjänst med responsiv layout. Mejl, notiser och Stripe Checkout fungerar redan på mobil.
+- **Nivå 2, webbapp på hemskärmen (framtida):** ikon på hemskärmen och push-notiser som komplement till e-post. Push på iPhone och iPad kräver att appen lagts på hemskärmen; aktuella iOS-krav ska kontrolleras.
+- **Nivå 3, egen app i App Store och Google Play (framtida, det som beskrivs ovan):** utveckling per plattform eller med ett gemensamt ramverk, butikskonton och granskning, och appinloggning med token (BankID, avsnitt 15.2, passar där). Apples regler för betalning av digitala tjänster måste utredas, eftersom de avgör om kunden får köpa med Stripe i appen.
+- **Påverkan på modellen vid nivå 2 och 3:** ett API-lager för appar, push som ny kanal (regeln om en notis per kontroll och bevakning gäller då per kanal, och glossariets notis behöver ses över) samt platsdata och push-token i integritetspolicyn.
 
 ### 15.2 Inloggning för kunder
 
