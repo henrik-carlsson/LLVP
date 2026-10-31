@@ -18,7 +18,7 @@ PRICE_URL = "https://www.elprisetjustnu.se/api/v1/prices/{year}/{md}_{area}.json
 WEATHER_URL = (
     "https://api.open-meteo.com/v1/forecast"
     "?latitude={lat}&longitude={lon}&hourly=temperature_2m"
-    "&timezone={tz}&forecast_days=3"
+    "&timezone={tz}&forecast_days={days}"
 )
 
 
@@ -47,7 +47,8 @@ def hourly_prices(area, day, tz):
 
 def hourly_temperatures(cfg, tz):
     url = WEATHER_URL.format(
-        lat=cfg["latitude"], lon=cfg["longitude"], tz=cfg["timezone"].replace("/", "%2F")
+        lat=cfg["latitude"], lon=cfg["longitude"], tz=cfg["timezone"].replace("/", "%2F"),
+        days=cfg.get("forecast_days", 3),
     )
     data = fetch_json(url)["hourly"]
     return {
@@ -67,6 +68,12 @@ def round_half(x):
     return round(x * 2) / 2
 
 
+def coldest_ahead(start, temps, hours):
+    """Lägsta prognostiserade utetemperatur under de närmaste `hours` timmarna (inkl. start)."""
+    vals = [temps[t] for t in (start + timedelta(hours=i) for i in range(hours + 1)) if t in temps]
+    return min(vals) if vals else None
+
+
 def build_plan(prices, temps, cfg):
     """Returnerar en lista [{hour, price, outdoor_c, setpoint_c, reason}]."""
     hours = sorted(prices)
@@ -77,12 +84,23 @@ def build_plan(prices, temps, cfg):
     high = percentile(values, cfg["expensive_percentile"])
     flat = (high - low) < cfg["min_spread_sek_per_kwh"]
 
+    lookahead = cfg.get("lookahead_hours", 0)
     plan = []
     for h in hours:
         p = prices[h]
         outdoor = temps.get(h)
         setpoint, reason = cfg["base_c"], "grundtemperatur"
-        if flat:
+        coldest = coldest_ahead(h, temps, lookahead) if lookahead else None
+        cold_coming = (
+            coldest is not None
+            and outdoor is not None
+            and coldest < cfg["cold_trigger_c"] < outdoor
+        )
+        if cold_coming and (cfg.get("precold_mode") == "all" or p <= low) and p < high:
+            setpoint, reason = cfg["base_c"] + cfg["precold_preheat_c"], "förvärm inför kyla"
+        elif cold_coming:
+            reason = "kyla på väg, ingen sänkning"
+        elif flat:
             reason = "små prisskillnader"
         elif p <= low:
             setpoint, reason = cfg["base_c"] + cfg["preheat_c"], "billig timme, förvärm"

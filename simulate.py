@@ -10,6 +10,7 @@ import calendar
 import csv
 import json
 import sys
+import random
 import urllib.parse
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -55,6 +56,15 @@ def step_house(t_in, t_out, setpoint, sim):
     return t_next, heat, heat / cop(t_out, sim)
 
 
+def forecast_from(temps, run, sim):
+    """Prognos vid körningstillfället: facit plus ett samlat fel som växer med ledtiden."""
+    sd0, sd1 = sim.get("forecast_sd_base_k", 0.0), sim.get("forecast_sd_per_hour_k", 0.0)
+    if not (sd0 or sd1):
+        return temps
+    z = random.Random(f"{sim.get('forecast_seed', 1)}-{run.isoformat()}").gauss(0, 1)
+    return {h: t + z * (sd0 + sd1 * max((h - run).total_seconds() / 3600, 0)) for h, t in temps.items()}
+
+
 def planned_setpoints(cfg, tz, prices_all, temps, first_day, last_day):
     """Rullande plan: varje dags körning gäller tills nästa körning tar över."""
     setpoints = {}
@@ -63,7 +73,7 @@ def planned_setpoints(cfg, tz, prices_all, temps, first_day, last_day):
         run = datetime(day.year, day.month, day.day, RUN_HOUR, tzinfo=tz)
         end = run + timedelta(hours=cfg["horizon_hours"])
         window = {h: p for h, p in prices_all.items() if run <= h < end}
-        rows = plan.build_plan(window, temps, cfg)
+        rows = plan.build_plan(window, forecast_from(temps, run, cfg["simulation"]), cfg)
         next_run = run + timedelta(days=1)
         for r in rows:
             h = datetime.fromisoformat(r["hour"])
@@ -94,7 +104,7 @@ def load_data(cfg, month):
     while d <= last + timedelta(days=1):
         prices_all.update(plan.hourly_prices(cfg["price_area"], d, tz))
         d += timedelta(days=1)
-    temps = historical_temperatures(cfg, tz, first - timedelta(days=1), last + timedelta(days=1))
+    temps = historical_temperatures(cfg, tz, first - timedelta(days=1), last + timedelta(days=5))
     return first, last, prices_all, temps
 
 
