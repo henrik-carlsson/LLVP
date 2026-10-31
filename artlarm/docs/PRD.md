@@ -73,20 +73,22 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 | --- | --- |
 | P1 | En kund ska kunna skapa godtyckligt många bevakningar, och varje bevakning gäller en fastighet. Flera fastigheter bevakas med flera bevakningar i samma varukorg. |
 | P2 | En fastighet anges med fastighetsbeteckning (uppslag mot Lantmäteriet), uppladdad Forestand-fil eller GeoJSON. Systemet visar den uppslagna ytan på karta så att kunden kan kontrollera den (förslag). |
-| P3 | För varje fastighet ska kunden kunna välja "endast ytor med avverkningsanmälan". Bevakad yta är då skärningen mellan fastigheten och kartlagret med avverkningsanmälningar; annars hela fastigheten. Kunden väljer vilka avverkningsanmälningar som ska bevakas (P13, P14). |
-| P4 | Bevakningsperioden anges med start- och slutdatum. Perioden har ingen fast längdgräns, men en varning visas om den är längre än 3 månader, även när startdatum ligger bakåt i tiden. Beloppstaket per köp (B11) är den hårda gränsen. Startdatum får ligga bakåt eller framåt i tiden. |
-| P5 | Ligger startdatum bakåt i tiden ska notiser genereras direkt för observationer från startdatum till nu (beteende från prototypen). |
+| P3 | För varje fastighet ska kunden kunna välja "endast ytor med avverkningsanmälan". Bevakad yta är då skärningen mellan fastigheten och kartlagret med avverkningsanmälningar; annars hela fastigheten. Kunden väljer vilka avverkningsanmälningar som ska bevakas och anger en egen period för varje (P13, P14). Varje vald avverkningsanmälan är en rad i bevakningen med egen yta, period och eget pris (P17). |
+| P4 | Bevakningsperioden anges med start- och slutdatum, för hela fastigheten en gång per bevakning och vid avverkningsval separat för varje vald avverkningsanmälan (P13, P14). Perioden har ingen fast längdgräns, men en varning visas om den är längre än 3 månader (per rad vid avverkningsval), även när startdatum ligger bakåt i tiden. Beloppstaket per köp (B11) är den hårda gränsen. Startdatum får ligga bakåt eller framåt i tiden. |
+| P5 | Ligger startdatum bakåt i tiden ska notiser genereras direkt för observationer från startdatum till nu (beteende från prototypen). Vid avverkningsval gäller det varje rad för sig: fynd inom radens yta och period. |
 | P6 | Flertydiga eller okända beteckningar ger ett begripligt fel med förslag, t.ex. att ange kommun (beteende från prototypen). |
-| P7 | Kunden ska se bevakad area i hektar och priset innan betalning. |
-| P8 | Vid valet "endast avverkningsanmälda ytor" fryses bevakad yta vid köp. Priset räknas på arean vid köp och ändras inte under perioden. |
+| P7 | Kunden ska se bevakad area i hektar och priset innan betalning, vid avverkningsval per rad och totalt. |
+| P8 | Vid valet "endast avverkningsanmälda ytor" fryses bevakad yta och varje rads period vid köp. Priset räknas på arean vid köp och ändras inte under perioden. |
 | P9 | När en ny avverkningsanmälan tillkommer inom en fastighet i en aktiv bevakning skickas information om det på samma sätt som en notis (tidigast dagen efter, eftersom källan uppdateras varje natt), med fastighet, tidpunkt, yta i hektar och länk till bevakningen. |
 | P10 | När kunden loggar in och tittar på sina bevakningar ska det tydligt framgå vilka som har nya avverkningsanmälningar. |
-| P11 | Kunden ska enkelt kunna komplettera en bevakning med de nya ytorna. Kompletteringen läggs i varukorgen och betalas som övriga bevakningar. Priset är nya hektar × återstående dagar × grundpriset, och slutdatum är oförändrat. |
+| P11 | Kunden ska enkelt kunna komplettera en bevakning med de nya ytorna. Kompletteringen läggs i varukorgen och betalas som övriga bevakningar. Vid avverkningsval blir varje ny avverkningsanmälan en ny rad med egen period (förvald enligt P14), priset är radens hektar × dagar × grundpriset och övriga rader är oförändrade; för hela fastigheten är priset nya hektar × återstående dagar × grundpriset och slutdatum oförändrat. |
 | P12 | Har en fastighet 0 ha avverkningsanmälda ytor vid köp blockeras köpet med en förklaring, och kunden kan i stället välja hela fastigheten. |
-| P13 | Väljer kunden "endast avverkningsanmälda ytor" ska en lista visas över fastighetens avverkningsanmälningar för hela källans period (ca 5 år), med ärendenummer, inkomdatum, avverkningstyp och yta inom fastigheten. Kunden kryssar i de avverkningsanmälningar som ska bevakas. Bevakad yta, pris och köpsspärren vid 0 ha (P12) räknas bara på de valda avverkningsanmälningarna. |
-| P14 | När avverkningsanmälningar har valts är förvalt startdatum inkomdatum för den tidigaste valda avverkningsanmälan, och förvalt slutdatum är inkomdatum för den senaste valda avverkningsanmälan plus 6 veckor. Blir perioden längre än 3 månader visas en varning, men datumen klipps inte. Kunden kan ändra båda datumen, och beloppstaket per köp (B11) är den hårda gränsen. |
-| P15 | De valda avverkningsanmälningarna sparas på bevakningen och ytan fryses vid köp (P8). Avverkningsanmälningar som kommer efter köpet visas som nya i listan och kan läggas till som komplettering (P9–P11). |
+| P13 | Väljer kunden "endast avverkningsanmälda ytor" ska en lista visas över fastighetens avverkningsanmälningar för hela källans period (ca 5 år), med ärendenummer, inkomdatum, avverkningstyp och yta inom fastigheten. Kunden kryssar i de avverkningsanmälningar som ska bevakas och anger start- och slutdatum för varje (förvalda enligt P14); ett kommando sätter samma datum på alla valda rader. Bevakad yta, pris och köpsspärren vid 0 ha (P12) räknas bara på de valda avverkningsanmälningarna. |
+| P14 | När avverkningsanmälningar har valts är förvalt startdatum för varje rad dess inkomdatum och förvalt slutdatum dess inkomdatum plus 6 veckor. Blir en rads period längre än 3 månader visas en varning, men datumen klipps inte. Kunden kan ändra datumen för varje rad, och beloppstaket per köp (B11) är den hårda gränsen. |
+| P15 | De valda avverkningsanmälningarna sparas på bevakningen som rader med egen period, och ytan och perioderna fryses vid köp (P8). Avverkningsanmälningar som kommer efter köpet visas som nya i listan och kan läggas till som komplettering (P9–P11). |
 | P16 | Fastighetens geometri och de valda avverkningsanmälningarnas ytor sparas som en ögonblicksbild vid köp och används under hela bevakningen, även om Lantmäteriets eller Skogsstyrelsens data ändras senare. |
+| P17 | Vid avverkningsval har varje vald avverkningsanmälan egen period, egen yta och eget pris (en rad). Ett fynd ger notis för en rad bara om det ligger inom radens yta och period, och notisen anger ärendenummer. Bevakningen är en kundens enhet för köp, varukorg och borttagning; raderna har egen status och egen förlängning. |
+| P18 | Valda avverkningsanmälningar prissätts var och en för sig, även när deras ytor och perioder överlappar; ingen sammanslagning av ytor görs. Fakturan visar därför en rad per anmälan. |
 
 ### 5.3 Mottagare
 
@@ -99,13 +101,13 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 
 | ID | Krav |
 | --- | --- |
-| L1 | En notis skickas så snart en ny observation upptäcks inom bevakad yta och bevakningsperiod. Målet för "så snart" definieras i avsnitt 10, och vilka observationer som ger notis står i avsnitt 5.8. |
-| L2 | Notisen innehåller typ av observation (art), tidpunkt, fastighet och en klickbar länk till observationen hos Artdatabanken eller fyndets egen källa. Varje observation anger källans namn (till exempel Artportalen eller iNaturalist). Samma fynd i flera källor avdupliceras inte i version 1. |
+| L1 | En notis skickas så snart en ny observation upptäcks inom bevakad yta och bevakningsperiod (vid avverkningsval radens yta och period). Målet för "så snart" definieras i avsnitt 10, och vilka observationer som ger notis står i avsnitt 5.8. |
+| L2 | Notisen innehåller typ av observation (art), tidpunkt, fastighet, vid avverkningsval avverkningsanmälans ärendenummer, och en klickbar länk till observationen hos Artdatabanken eller fyndets egen källa. Varje observation anger källans namn (till exempel Artportalen eller iNaturalist). Samma fynd i flera källor avdupliceras inte i version 1. |
 | L3 | Fynd utanför gränsen men inom positionens osäkerhet (högst 500 m) ger notis och markeras "OSÄKERT LÄGE" med avstånd och osäkerhet (beteende från prototypen). |
 | L4 | En observation ger notis högst en gång per bevakning. Misslyckade utskick försöks igen utan att skapa dubbletter (förbättring av prototypen). |
-| L5 | Den första genomgången vid köp skickas som ett enda startrapport-mejl med alla träffar sedan bevakningsperiodens start, som en lista. |
+| L5 | Den första genomgången vid köp skickas som ett enda startrapport-mejl med alla träffar sedan bevakningsperiodens start (vid avverkningsval varje rads start), som en lista. |
 | L6 | Notiser baseras bara på observationer vars licens tillåter kommersiell användning. Ett licensfilter styrs av administratören, och observationens licens hämtas från SOS (fältet license). Förvalt läge (förslag) är försiktigt: notiser för Artportalens fynd och för observationer med licensen cc0, cc-by eller cc-by-sa. Observationer med icke-kommersiell licens (cc-by-nc, cc-by-nc-sa), licens med förbud mot bearbetning, utan angiven licens (utom Artportalens) eller från källor utan känd åtkomstträtt utesluts. I stickprovet kring Uppsala ger det notiser för ca 83 % av observationerna (11 790 av 14 230). Läget kan lindras när juristen svarat (avsnitt 9). |
-| L7 | Varje kontroll som hittar nya observationer skickar ett enda mejl per bevakning med alla nya observationer i en lista (art, tid, länk, markering för osäkert läge), sorterad efter observationernas klockslag. En inventering som pagår längre än tiden mellan kontrollerna kan därför ge flera mejl, ett för varje kontroll där nya observationer har tillkommit. |
+| L7 | Varje kontroll som hittar nya observationer skickar ett enda mejl per bevakning med alla nya observationer i en lista (art, tid, länk, ärendenummer vid avverkningsval, markering för osäkert läge), sorterad efter observationernas klockslag. En inventering som pagår längre än tiden mellan kontrollerna kan därför ge flera mejl, ett för varje kontroll där nya observationer har tillkommit. |
 | L8 | Tjänsten gör en kontroll var 15:e minut. Löftet till kunden är en notis inom 30 minuter från att observationen syns i SOS (95 % av notiserna). SOS visade i en mätning 2026-10-27 nya observationer ca 10 minuter efter rapport. Avverkningsfilen hämtas nattligen. |
 | L9 | Ett mejl visar högst de 50 senaste observationerna och antalet övriga. Alla träffar ligger som CSV-bilaga. Det gäller både startrapport och vanliga notiser vid stor inventering. |
 
@@ -116,17 +118,17 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 | S1 | Kunden ska kunna välja om en daglig sammanfattning ska skickas. Valet gäller kontot, och sammanfattningen listar alla kontots aktiva bevakningar. |
 | S2 | Sammanfattningen skickas varje dygn kl 09:00 svensk tid, även om inget registrerats. |
 | S3 | Kontot får högst en sammanfattning per dygn, även om det har flera aktiva bevakningar. |
-| S4 | Sammanfattningen listar notiserna sedan förra sammanfattningen per fastighet, inklusive länkar. |
+| S4 | Sammanfattningen listar notiserna sedan förra sammanfattningen per fastighet (vid avverkningsval med ärendenummer), inklusive länkar. |
 
 ### 5.6 Hantering av bevakning
 
 | ID | Krav |
 | --- | --- |
-| H1 | Kunden ska kunna ta bort en bevakning. Bevakning och notiser upphör direkt. |
+| H1 | Kunden ska kunna ta bort en bevakning. Bevakning och notiser upphör direkt. Vid avverkningsval tas hela bevakningen bort, inte enskilda rader (version 1). |
 | H2 | Innan borttagning visas att ingen återbetalning sker. Kunden måste aktivt bekräfta att hen tagit del av det (kryssruta), och bekräftelsen loggas med tidpunkt. |
-| H3 | En bevakning är aktiv först när betalningen är genomförd; utgångna bevakningar bevakas inte längre och kan inte förlängas efter slutdatum (en ny bevakning skapas i stället). |
-| H4 | Kunden ska kunna förlänga slutdatum för en aktiv bevakning. Blir den totala perioden (från startdatum till nytt slutdatum) längre än 3 månader visas en varning. Beloppstaket per köp (B11) begränsar förlängningen. |
-| H5 | Förlängningen läggs i varukorgen och betalas som övriga bevakningar. Priset är bevakad yta × tillkommande dagar × grundpris, och rabattkod kan användas. Bevakningen ändras först när betalningen bekräftats; en obetald förlängning ändrar ingenting. |
+| H3 | En bevakning är aktiv först när betalningen är genomförd; utgångna bevakningar bevakas inte längre och kan inte förlängas efter slutdatum (en ny bevakning skapas i stället). Vid avverkningsval gäller det varje rad: bevakningen är delvis utgången när några rader gått ut och utgången först när alla gjort det. |
+| H4 | Kunden ska kunna förlänga slutdatum för en aktiv bevakning, vid avverkningsval för en eller flera aktiva rader. Blir den totala perioden (från startdatum till nytt slutdatum, per rad vid avverkningsval) längre än 3 månader visas en varning. Beloppstaket per köp (B11) begränsar förlängningen. |
+| H5 | Förlängningen läggs i varukorgen och betalas som övriga bevakningar. Priset är bevakad yta × tillkommande dagar × grundpris (per förlängd rad vid avverkningsval), och rabattkod kan användas. Bevakningen ändras först när betalningen bekräftats; en obetald förlängning ändrar ingenting. |
 | H6 | Förlängningen gäller bevakningens fastighet och yta som den var vid köp, inklusive eventuella kompletteringar (P11). Nya avverkningsanmälningar kommer inte med automatiskt (förslag). |
 | H7 | Aktiva bevakningar kan tas bort; utgångna kan inte tas bort. Utgångna bevakningar syns i 12 månader och döljs därefter. Notishistoriken sparas lika länge som bevakningen syns och raderas därefter. Köp- och kvittouppgifter sparas enligt bokföringskravet. |
 
@@ -179,21 +181,21 @@ Kunden betalar 2 kr per hektar och dag för bevakad yta, i förskott, och priset
 | ID | Krav |
 | --- | --- |
 | B1 | Priset är 2 kr per hektar och dag initialt och ändras utan kodrelease. Priset som gällde vid köp sparas på bevakningen. Grundpriset ändras av en administratör (A4). |
-| B2 | Bevakad areal är hela fastighetens yta, eller bara ytor med avverkningsanmälan om kunden valt det (P3). |
+| B2 | Bevakad areal är hela fastighetens yta, eller bara ytor med avverkningsanmälan om kunden valt det (P3); vid avverkningsval räknas den per avverkningsanmälan. |
 | B3 | Kunden betalar i förskott för hela bevakningsperioden när bevakningen läggs upp. |
 | B4 | Kunden ska kunna lägga flera bevakningar i en varukorg och betala allt på en gång, med en enda betalning. |
 | B5 | Betalning görs med en extern betalningslösning, t.ex. Stripe Checkout. Kortuppgifter hanteras aldrig av Artbevakning. Version 1 stöder kortbetalning; Swish och faktura kan komma senare. |
 | B6 | En bevakning aktiveras först när betalningen bekräftats av betalningsleverantörens webhook. Webhooks hanteras idempotent så att samma betalning inte aktiverar två gånger. |
-| B7 | Kunden får en betald faktura (via Stripe Invoicing) med specifikation per bevakning (fastighet, hektar, dagar, belopp, moms), som mejlas. Moms beräknas med Stripe Tax: 25 %, och omvänd skattskyldighet för EU-företag med giltigt momsnummer. Kunden anger organisationsnummer (B10) och fakturaadress i kassan. |
+| B7 | Kunden får en betald faktura (via Stripe Invoicing) med specifikation per bevakning (fastighet, hektar, dagar, belopp, moms) och vid avverkningsval per avverkningsanmälan (ärendenummer, hektar, period, dagar, belopp), som mejlas. Moms beräknas med Stripe Tax: 25 %, och omvänd skattskyldighet för EU-företag med giltigt momsnummer. Kunden anger organisationsnummer (B10) och fakturaadress i kassan. |
 | B8 | En borttagen bevakning ger ingen återbetalning. Kunden informeras vid köp och vid borttagning och måste bekräfta (H2). |
-| B9 | Dagar räknas från och med startdatum till och med slutdatum och inkluderar dagar före köpdatum. Perioden har ingen fast längdgräns; en varning visas över 3 månader (P4). |
+| B9 | Dagar räknas från och med startdatum till och med slutdatum och inkluderar dagar före köpdatum. Vid avverkningsval räknas dagarna per rad. Perioden har ingen fast längdgräns; en varning visas över 3 månader (P4). |
 | B10 | Tjänsten säljs till företag och yrkesutförare. Priser visas exklusive moms och moms läggs på vid betalning. Köparen intygar vid köp med en ikryssad ruta att det sker i näringsverksamhet och anger organisationsnummer (obligatoriskt). Numret formatkontrolleras men kontrolleras inte mot register i version 1. Intyg, organisationsnummer och tidpunkt sparas och skrivs på kvittot. |
 | B11 | Ett konfigurerbart tak per köp (belopp eller hektar) gäller. Över taket visas "kontakta oss" i stället för betalning. Taket är initialt 5 000 kr per köp, ändras av en administratör (förslag) och är den hårda gränsen; det finns ingen separat gräns för periodens längd. Taket gäller varukorgens fullpris före rabatt, och komplettering och förlängning räknas som övriga rader i samma varukorg. |
 | B12 | Support sker via e-post till support@mjukvaruverkstan.se, som visas i gränssnittet och i mejlen. Adressen finns inte ännu och måste skapas före lansering. Svar ges inom 3 arbetsdagar och svarstiden anges för kunden. Återbetalning görs bara manuellt, via Stripe, när fel uppstått hos Artbevakning. |
 | B13 | Kunden ska kunna ange en rabattkod i varukorgen. En giltig kod ger en procentuell rabatt på varukorgens belopp före moms, som visas på en egen rad med nytt totalbelopp. En ogiltig eller borttagen kod ger ett tydligt felmeddelande. |
 | B14 | Rabatten gäller alla bevakningar i varukorgen. Koden och rabatten sparas på ordern och visas på kvittot (beslutat: flergångskod utan giltighetstid, en kod per köp, ingen kombination av koder). |
 | B15 | Blir totalen 0 kr (rabatt 100 %) aktiveras bevakningarna utan betalning hos Stripe (förslag). |
-| B16 | Ytan avrundas uppåt per bevakning till närmaste 0,1 ha (aldrig nedåt) och priset räknas exakt i öre. Minsta belopp per köp är 200 kr, räknat på varukorgens fullpris före rabatt och exklusive moms; är fullpriset lägre debiteras 200 kr. |
+| B16 | Ytan avrundas uppåt per bevakning, vid avverkningsval per rad, till närmaste 0,1 ha (aldrig nedåt) och priset räknas exakt i öre. Minsta belopp per köp är 200 kr, räknat på varukorgens fullpris före rabatt och exklusive moms; är fullpriset lägre debiteras 200 kr. |
 | B17 | Priset låses när kunden går till kassan. Varukorgen sparas 7 dagar; öppnas kassan igen räknas priset om. En betalning gäller hela varukorgen: antingen aktiveras alla bevakningar eller ingen. En misslyckad betalning lämnar varukorgen kvar. |
 
 **Räkneexempel (förslag på beräkning, belopp utan moms):**
@@ -306,6 +308,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | L8, L9 | Ett nytt fynd som syns i SOS ger notis inom 30 minuter i 95 % av fallen. En startrapport med 400 observationer visar de 50 senaste i mejlet och alla 400 i CSV-bilagan. |
 | B17, H7, D11, A7 | En misslyckad betalning aktiverar ingen bevakning och lämnar varukorgen kvar. En utgången bevakning kan inte tas bort och döljs efter 12 månader. Ett källavbrott över 24 timmar ger ett mejl om försenade notiser. Ett administratörsuppslag av en kunds bevakning loggas. |
 | D12–D15 | Med ett kommando startar hela tjänsten lokalt, och ett simulerat köp av en bevakning ger en aktiv bevakning, en faktura och ett mejl i mejlfångaren. En misslyckad simulerad betalning aktiverar ingenting. Skarpa Stripe-nycklar tillsammans med simulerad betalning stoppar starten. |
+| P17, P18 | Med två avverkningsanmälningar med olika perioder ger ett fynd inom den ena radens yta men utanför dess period ingen notis, och ett fynd inom en annan rads period ger notis med rätt ärendenummer. Priset och fakturan har en rad per anmälan, även när ytorna överlappar. En utgången rad bevakas inte längre medan övriga rader fortsätter, och bevakningen visas som delvis utgången. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -368,6 +371,9 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 39. Lokal körning först | Allt ska gå att köra lokalt med Docker Compose före drift på AWS, med samma containerbilder. | D12 |
 | 40. Simulerad betalning | Betalning via en adapter; en egen simulerad kassa skickar samma webhook-händelser som Stripe i ett första skede. | D13 |
 | 41. Stripe i testläge | Stripe prövas i testläge lokalt före AWS; skiftet sker bara via konfiguration. | D14, D15 |
+| 42. Egen period per avverkningsanmälan | Vid avverkningsval har varje vald anmälan egen period, yta och eget pris; bevakningen är kvar som enhet för köp och borttagning. | P3–P5, P7, P8, P11, P13–P15, P17, B2, B7, B9, B16, H3–H5 |
+| 43. Överlapp prissätts var för sig | Anmälningar som överlappar i yta och tid prissätts var och en för sig, utan sammanslagning. | P18 |
+| 44. Hel bevakning tas bort | Enskilda rader kan inte tas bort i version 1; bara hela bevakningen. | H1 |
 
 **Kvarstående frågor**
 
@@ -399,19 +405,19 @@ Kontot skapas när e-post, lösenord och båda godkännandena finns (K1, K7, K8)
 
 ![Skärmbild 2: ny bevakning med pris](img/skarmbild-2-ny-bevakning.png)
 
-Fastigheter, valet "endast avverkningsanmälda ytor" per fastighet med en lista där avverkningsanmälningar kryssas i (P13), förvalda datum som följer valen (P14), bevakningsperiod (med varning över 3 månader), kontots mottagaradress samlas på en sida, och priset visas innan varukorgen (P1–P7, M1). Valet av daglig sammanfattning görs för kontot (S1).
+Fastigheter, valet "endast avverkningsanmälda ytor" per fastighet med en lista där avverkningsanmälningar kryssas i (P13), start- och slutdatum och pris för varje anmälan, förvalda enligt P14 (P17), bevakningsperiod per rad (med varning över 3 månader), kontots mottagaradress samlas på en sida, och priset visas innan varukorgen (P1–P7, M1). I bilden har rad 2 kortats och fått en kortare period än de andra, och priset räknas per rad. Valet av daglig sammanfattning görs för kontot (S1).
 
 ### 13.3 Varukorg och betalning
 
 ![Skärmbild 3: varukorg och betalning](img/skarmbild-3-varukorg.png)
 
-Två bevakningar betalas med en betalning (B4, B5). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Köparen intygar också näringsverksamhet och anger organisationsnummer (B10).
+Två bevakningar betalas med en betalning (B4, B5). Oxberg visas uppdelad i en rad per avverkningsanmälan med egen period och eget belopp (P17, B7). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Köparen intygar också näringsverksamhet och anger organisationsnummer (B10).
 
 ### 13.4 Mina bevakningar
 
 ![Skärmbild 4: mina bevakningar](img/skarmbild-4-mina-bevakningar.png)
 
-Kunden ser aktiva och avslutade bevakningar och kan ta bort (H1) eller förlänga (H4, H5) en aktiv. Utgångna bevakningar kan inte förlängas utan ersätts av en ny (H3). En markering visar när nya avverkningsanmälningar har tillkommit, med en länk för att lägga till dem (P10, P11; markeringen i bilden är ett exempel).
+Kunden ser aktiva och avslutade bevakningar och kan ta bort (H1) eller förlänga (H4, H5) en aktiv. Utgångna bevakningar kan inte förlängas utan ersätts av en ny (H3). En markering visar när nya avverkningsanmälningar har tillkommit, med en länk för att lägga till dem (P10, P11; markeringen i bilden är ett exempel). Vid avverkningsval visas varje avverkningsanmälan som en rad med egen status och egen förlängning, och bevakningen är delvis utgången när några rader gått ut (H3, H4, P17).
 
 ### 13.5 Bekräfta borttagning och kontoavslut
 
@@ -423,7 +429,7 @@ Till vänster en bevakning (H1, H2), till höger kontoavslut (K6). Båda kräver
 
 ![Skärmbild 6: notismejl och dygnssammanfattning](img/skarmbild-6-notismejl.png)
 
-Notisen innehåller art, tidpunkt, fastighet och länk till observationen (L2), med tydlig markering när läget är osäkert (L3). Sammanfattningen kommer kl 09:00, ett mejl per adress, och listar alla fastigheter även där inget registrerats (S2, S3). Exemplen bygger på de riktiga notiserna för Oxberg 95:1 från prototypen.
+Notisen innehåller art, tidpunkt, fastighet och länk till observationen (L2), med tydlig markering när läget är osäkert (L3). Vid avverkningsval anger notisen även avverkningsanmälans ärendenummer. Sammanfattningen kommer kl 09:00, ett mejl per adress, och listar alla fastigheter även där inget registrerats (S2, S3). Exemplen bygger på de riktiga notiserna för Oxberg 95:1 från prototypen.
 
 ## 14. Avtal och bekräftelser (förslag)
 
@@ -576,8 +582,8 @@ Avgifterna i tabellen nedan räknas på beloppet inklusive 25 % moms, med faktur
 | Ordervärde exkl. moms | Inkl. moms | Stripe, standardkort | Andel av exkl. moms | Stripe, premiumkort |
 | --- | --- | --- | --- | --- |
 | 200 kr (minsta belopp) | 250 kr | 7,80 kr | 3,9 % | 11,05 kr |
-| 326,80 kr (en bevakning, skärmbild 2) | 408,50 kr | 11,60 kr | 3,6 % | 16,91 kr |
-| 1 074,80 kr (varukorgen, skärmbild 3) | 1 343,50 kr | 34,04 kr | 3,2 % | 51,51 kr |
+| 301,60 kr (en bevakning med tre rader, skärmbild 2) | 377,00 kr | 10,85 kr | 3,6 % | 15,75 kr |
+| 1 049,60 kr (varukorgen, skärmbild 3) | 1 312,00 kr | 33,29 kr | 3,2 % | 50,34 kr |
 | 5 000 kr (beloppstaket) | 6 250 kr | 151,80 kr | 3,0 % | 233,05 kr |
 
 ### 17.3 Övriga tjänster
@@ -596,7 +602,7 @@ Avgifterna i tabellen nedan räknas på beloppet inklusive 25 % moms, med faktur
 ### 17.4 Vad det betyder
 
 - **Break-even för drift:** med ca 20 kr per månad för domän blir de fasta kostnaderna ca 955 kr (liten start) och ca 1 375 kr (robust). Efter Stripe-avgifter (3,0–3,5 %) krävs ca 985 respektive 1 420 kr i intäkt exklusive moms per månad, vilket motsvarar ca 490 och 710 hektardagar à 2 kr.
-- **I bevakningar:** en bevakning på 3,8 ha i 43 dagar (326,80 kr) behöver såldas ca 4 gånger per månad för liten start och ca 5 gånger för robust drift. En bevakning av en hel fastighet på 65,5 ha i 30 dagar (3 930 kr) täcker båda nivåerna ensam.
+- **I bevakningar:** en bevakning med tre avverkningsanmälningar på sammanlagt 3,8 ha och olika perioder (301,60 kr) behöver såldas ca 4 gånger per månad för liten start och ca 5 gånger för robust drift. En bevakning av en hel fastighet på 65,5 ha i 30 dagar (3 930 kr) täcker båda nivåerna ensam.
 - **Kostnaden är i huvudsak fast:** fler kunder ökar mest Stripe-avgifterna. Hur många kunder en liten start klarar beror på antalet kontroller mot SOS (en sökning per bevakning och kontroll) och är inte mätt; det kräver ett belastningstest.
 - **Osäkerheter:** avgifter hos Artdatabanken och Lantmäteriet, valutakursen (kr per USD) och om Stripes avgifter belastas med moms.
 

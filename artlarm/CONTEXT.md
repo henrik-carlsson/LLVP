@@ -45,8 +45,12 @@ Den del av fastigheten som en bevakning gäller: hela fastigheten eller de valda
 _Avoid_: Bevakningsområde
 
 **Bevakningsperiod**:
-Tiden, med start- och slutdatum, som en bevakning gäller. Priset räknas på alla dagar i perioden.
+Tiden, med start- och slutdatum, som en bevakning gäller. Vid avverkningsval har varje rad sin egen bevakningsperiod. Priset räknas på alla dagar i perioden.
 _Avoid_: Larmperiod
+
+**Rad**:
+Vid avverkningsval den del av en bevakning som gäller en vald avverkningsanmälan, med egen yta, bevakningsperiod, status och pris. En bevakning av hela fastigheten har ingen rad.
+_Avoid_: Delbevakning, underbevakning
 
 **Avverkningsanmälan**:
 En anmälan om avverkning till Skogsstyrelsen, med en yta och ett inkomdatum.
