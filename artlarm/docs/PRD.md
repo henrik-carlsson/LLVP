@@ -504,7 +504,26 @@ En mobilapp eller mobilanpassad webbapp skulle kunna visa observationerna på en
 
 ### 15.2 Inloggning för kunder
 
-Version 1 har e-post och lösenord med verifiering och återställning. Möjliga utbyggnader: valfri tvåfaktor för kunder (administratörer har det redan) och BankID. BankID kräver avtal och kostar per inloggning, och tas upp när tjänsten har kunder som efterfrågar det.
+Version 1 har e-post och lösenord med verifiering och återställning. Möjliga utbyggnader: valfri tvåfaktor för kunder (administratörer har det redan) och BankID. BankID beskrivs nedan och tas upp när tjänsten har kunder som efterfrågar det.
+
+**BankID: integrationsvägar och kostnad.** Uppgifterna kommer från leverantörernas egna sidor och är inte offerter. BankID har ingen publik prislista; priset sätts i avtalet.
+
+| Väg | Så fungerar det | Kostnad enligt leverantörens sida |
+| --- | --- | --- |
+| Eget avtal med en bank (förlitande part) | Avtalet tecknas med den organisation som tillhandahåller tjänsten, och ett köparcertifikat installeras hos oss. Vi bygger anslutningen mot BankID:s gränssnitt själva. Mest arbete och lägst pris per inloggning vid stor volym. | [Nordea](https://www.nordea.se/foretag/produkter/mobilbank-internetbank/bankid-forlitande-part.html): anslutning enligt offert, 500 kr per månad och 20 öre per inloggning. Sidan är ungefär sex år gammal och kan vara inaktuell. Andra banker: offert. |
+| Förmedlare med OpenID Connect | Förmedlaren har bankavtalet och vi loggar in via standardprotokollet OpenID Connect. Snabbast att komma igång. | [Criipto (nu Idura)](https://www.criipto.com/pricing/criipto-verify): 0,013 € per lyckad inloggning och abonnemang från 67 € per månad med 1 000 inloggningar. En annan sida hos samma leverantör anger en uppstartsavgift på 160 €, så villkoren ska bekräftas. [Xenit](https://xenit.se/it-tjanster/xenit-eid/): från 3 350 kr per månad plus från 0,28 kr per inloggning. |
+| Inloggningstjänst med förmedlare (till exempel Auth0 och Criipto Verify) | Inloggningstjänsten hanterar även lösenord och tvåfaktor, och BankID kopplas in via förmedlaren ([Auth0:s guide](https://auth0.com/docs/connections/criipto/bankid-se)). Ett avtal med en svensk bank krävs för skarp drift. | Förmedlarens avgift enligt ovan plus inloggningstjänstens egen avgift (inte undersökt). |
+
+Räkneexempel med 400 inloggningar per månad (till exempel 100 kunder som loggar in fyra gånger): ca 580 kr per månad hos Nordea (exklusive anslutning), 67 € hos Criipto och ca 3 460 kr hos Xenit.
+
+**Bygget.** Leverantörer uppskattar 20 000–100 000 kr ([Swivrr](https://www.swivrr.se/priser/vad-kostar-bankid-integration)) respektive 80 000–250 000 kr ([weapp](https://weapp.se/integrationer/vad-kostar-en-bankid-integration)) för en integration, med stor spridning. Med en förmedlare via OpenID Connect blir arbetet mindre, men det är inte uppskattat. BankID har en kostnadsfri testmiljö med testidentiteter (testpersoner beställs via [demo.bankid.com](https://demo.bankid.com)), men den går inte att köra helt automatiskt.
+
+**Förutsättningar och förslag till krav**
+
+- Avtalet tecknas av bolaget, som inte finns ännu (jfr avsnitt 9).
+- BankID blir ett alternativ vid sidan av e-post och lösenord och kopplas till ett befintligt konto efter inloggning.
+- Personnummer är en särskilt skyddad uppgift i svensk lag och lagras inte i onödan; tjänsten sparar bara ett id från inloggningstjänsten (kontrolleras med jurist).
+- BankID är personligt medan kontot tillhör ett företag. Det behöver avgöras om flera personer ska kunna logga in på samma konto, vilket berör att version 1 har en enda mottagare per konto.
 
 ### 15.3 Företagsavtal (enterprise)
 
@@ -521,6 +540,21 @@ Större organisationer, till exempel skogsbolag, kommuner, försäkringsbolag oc
 | Avtal | Eget företagsavtal i stället för standardvillkoren: 12 månader, förnyelse och uppsägningstid, servicenivå för support, och en klausul om att observationerna kommer från tredje part (jfr avsnitt 9). |
 | Rapporter | Månadsrapport per organisation: antal notiser, arealer och användning av avtalets areal. |
 | Påverkan på modellen | Ny typ av bevakning (område i stället för fastighet) och ett nytt begrepp, företagsavtal, i glossariet. Prismodellen och områdesbevakningen bör beslutas i en ADR innan bygget. |
+
+### 15.4 Värva en kund
+
+En kund kan värva nya kunder, och både den som värvar och den som värvas får en rabatt på upp till 200 kr på sin nästa beställning. Inget av detta ingår i version 1.
+
+| Del | Förslag |
+| --- | --- |
+| Värvning | Varje kund har en personlig värvningslänk eller kod som kunden delar själv. Den nya kunden registrerar sig via länken eller anger koden vid registreringen. Tjänsten skickar inga inbjudningar per e-post i kundens namn, eftersom oombedd e-postmarknadsföring kräver samtycke (kontrolleras med jurist). |
+| Rabattens storlek | Ett fast belopp på högst 200 kr exklusive moms, men aldrig mer än köpets belopp. Det är en ny sorts rabatt, eftersom alla övriga rabatter är procentuella. |
+| När den ges | Den värvade får rabatten på sitt första köp efter registreringen. Den som värvar får sin rabatt när den värvade har genomfört ett betalt köp, och den gäller kundens nästa köp. |
+| Förhållande till andra rabatter | Regeln om en rabatt per köp gäller (B20): den som ger lägst pris. En värvningsrabatt som inte används för att en bättre rabatt gavs ligger kvar till nästa köp och förfaller efter 12 månader (förslag). |
+| Missbruksskydd | Man kan inte värva sitt eget organisationsnummer, ett organisationsnummer kan bara värvas en gång, och antalet belönade värvningar per kund och år begränsas (gräns att fastställa). Organisationsnumret kontrolleras bara till formatet i version 1, så skyddet är begränsat (B19). |
+| Integritet | Den som värvar ser bara antalet lyckade värvningar, inte vem som registrerat sig, och den värvade ser inte vem som värvat (förslag). |
+| Administratör | Slå på och av programmet, ändra beloppet och gränsen, och se värvningar och utdelade rabatter, med loggning (A1). |
+| Påverkan på modellen | Ny rabattyp i kronor, ett värvnings-id på kontot och ett tillgodo per kund. Glossariet får termen värvningsrabatt, och sambandet med B20 bör beslutas i en ADR innan bygget. |
 
 ## 16. Reklam på webbsidan (förslag)
 
