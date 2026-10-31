@@ -173,6 +173,21 @@ Notiser skickas för publika artobservationer i Artdatabankens SOS som ligger in
 - bara vissa källor, till exempel Artportalen
 - arter som kunden själv väljer bort, en buffert runt avverkningsanmälans yta, och avduplicering av samma fynd i flera källor
 
+### 5.9 Statistik över besök och användning
+
+Tjänsten lagrar statistik över besök och användning, för att driften och försäljningen ska kunna följas och förbättras. Statistiken samlas in i tjänstens egen databas, utan kakor och utan tredjepartsverktyg.
+
+| ID | Krav |
+| --- | --- |
+| T1 | Besöks- och användningsstatistik lagras i tjänstens egen databas. Ingen tredjepartsanalys används och ingen statistik lämnas till tredje part. Statistiken fungerar även i första lösningen (D18) och rensas av kommandot som rensar lokal data. |
+| T2 | Varje sidvisning lagras med tid, sida (utan personuppgifter i adressen), enhetstyp (mobil, iPad eller dator), webbläsare, hänvisande webbplats och om besökaren är inloggad. Ingen IP-adress lagras. Unika besökare räknas per dygn med ett anonymt id som inte går att koppla över dygn eller till en person (förslag). |
+| T3 | Användning lagras som händelser knutna till kontot: registrering, e-postverifiering, inloggning, ny bevakning i varukorgen, köp (belopp, hektar, dagar), förlängning, komplettering, borttagning, använd rabattkod, erbjudande eller inbjudningslänk samt ändrat val av sammanfattning. |
+| T4 | Notiser mäts bara hos avsändaren: antal skickade och misslyckade, per kontroll. Mejlen innehåller ingen spårningsbild och länkarna spåras inte. |
+| T5 | Statistiken använder inga kakor. Bara de kakor som behövs för inloggningen sätts, så att ingen kakbanner behövs (kontrolleras med jurist, avsnitt 9). |
+| T6 | Administratören ser per dag, vecka och månad: besök, unika besökare per dygn, enhetsfördelning, registreringar, verifierade konton, första bevakning och första köp (tratt med bortfall mellan stegen), antal köp, omsättning exklusive moms, genomsnittligt ordervärde, sålda hektar och bevakningsdagar, aktiva bevakningar, använda rabatter, erbjudanden och inbjudningar samt skickade notiser. |
+| T7 | Besökshändelser sparas i 13 månader (förslag) och raderas därefter. Användningshändelser knutna till ett konto raderas eller anonymiseras när kontot avslutas. Sammanställd statistik utan personuppgifter sparas tills vidare. |
+| T8 | Bara administratörer ser statistiken. Den visas som sammanställningar och det finns ingen export av enskilda kunders uppgifter; supportinsynen i A7 är ett separat flöde. |
+
 ## 6. Betalning och prissättning
 
 Kunden betalar 2 kr per hektar och dag för bevakad yta, i förskott, och priset ska vara en konfigurerbar parameter eftersom det är ett startvärde.
@@ -280,6 +295,7 @@ Innan tjänsten tas betalt för behöver följande kläras av jurist; punkterna 
 | Skyddade arter | Fynd som Artdatabanken har dolt eller generaliserat ger inget eller bara osäkert notis, medan öppna fynd av skyddade arter ger notis; detta ska framgå i villkoren så att tjänsten inte läses som en fullständig garanti. |
 | Ansvar | Notiserna är information från tredje part och kan vara försenade, ofullständiga eller ha osäkert läge. Villkoren ska innehålla ansvarsbegränsning. Ingen ägarkontroll görs av fastigheter i version 1; villkoren lägger ansvaret på kunden (juristen bekräftar). |
 | Cookies | Endast nödvändiga cookies för inloggning i första versionen, så att ingen samtyckesbanner behövs (förslag). Det gäller så länge reklamen inte använder tredjepartsskript eller spårning (avsnitt 16). |
+| Besöksstatistik och kakor | Statistiken (avsnitt 5.9) är tänkt att samlas in utan kakor och utan lagrad IP-adress, för att undvika samtycke och kakbanner. En jurist ska bekräfta att det håller och att koppling av användningshändelser till kontot täcks av berättigat intresse eller avtal, samt godkänna texten i integritetspolicyn. |
 
 ## 10. Mätetal och acceptanskriterier
 
@@ -324,6 +340,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | B18–B21, A8–A10 | Med ett erbjudande på 20 % till ett visst klockslag får ett köp i kassan före klockslaget 20 % rabatt och ett köp efter det ingen. En kassa som öppnats före sluttiden behåller rabatten vid betalning efter sluttiden, inom kassans giltighet. En kund med ett nytt organisationsnummer får förstagångsrabatten på sitt första betalda köp men inte på det andra. Med erbjudande 20 %, förstagångsrabatt 30 % och rabattkod 10 % får köpet bara 30 % rabatt, och en rabattkod som ger mindre rabatt än den som gäller ger ett meddelande. Fakturan visar rabattens namn och procent. |
 | D17 | Registrering, ny bevakning med flera rader, varukorg, betalning och Mina bevakningar går att genomföra på en mobil (375 px bred) och på en iPad utan sidledes rullning och med alla knappar och fält nåbara med fingret. |
 | D18–D20 | På en ren Mac och en ren Linux-maskin med Docker och Git startar installationskommandot hela tjänsten. Ett simulerat köp av en bevakning för en fastighet i Dalarna ger en aktiv bevakning, en faktura, en notis i mejlfångaren och ett verifikat i den simulerade Bokio. En fastighet utanför Dalarna avvisas med ett begripligt meddelande. |
+| T1–T8 | Efter en testkörning med besök, registrering, köp och notiser visar administrationens statistik rätt antal i varje steg av trattten, och databasen innehåller ingen IP-adress. Inga kakor utom inloggningens sätts. Ett avslutat konto saknar kopplade händelser. Statistiken syns inte för vanliga kunder. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -333,7 +350,7 @@ Leveransen delas i fem faser där varje fas har ett krav som måste vara uppfyll
 | --- | --- | --- |
 | 0. Prototyp | Bevakning, notiser, sammanfattning (levererat; flera mottagare i prototypen tas bort i produkten) | Provad mot riktiga datakällor (uppfyllt för SOS, Lantmäteriet och e-post) |
 | 0b. Första lösning (lokal) | Hela tjänsten lokalt på Mac eller Linux med Docker Compose (D12, D18), simulerad Stripe (D13) och simulerad Bokio (D19), för fastigheter i Dalarna (D20) | Acceptansen för D18–D20 uppfylld på både Mac och Linux |
-| 1. Grund för flera kunder | Konton och inloggning (K1–K8), PostgreSQL, separat worker, lokal körning med Docker Compose (D12), drift i molnet, e-post via SES, backup och övervakning | Två testkunder ser bara sina egna data i drift; prototypens funktioner fungerar onändrade |
+| 1. Grund för flera kunder | Konton och inloggning (K1–K8), PostgreSQL, separat worker, lokal körning med Docker Compose (D12), statistik (T1–T8), drift i molnet, e-post via SES, backup och övervakning | Två testkunder ser bara sina egna data i drift; prototypens funktioner fungerar onändrade |
 | 2. Avverkningsanmälan | Import av Skogsstyrelsens rikstäckande fil, skärning mellan fastighet och avverkningsanmälan (P3), regelbunden uppdatering, information om nya ytor och komplettering (P8–P12) | P3-kriteriet uppfyllt på minst två verkliga fastigheter; datakällans licens klarlagd |
 | 3. Bevakningsflöde och betalning | Bevakningsperiod med varning över 3 månader, varukorg, rabattkoder, förlängning (H4–H6), administration (A1–A6), betalningsadapter med simulerad betalning (D13) och Stripe i testläge (D14), webhooks, faktura, borttagning med bekräftelse | Acceptanskriterierna för P4, M1, B4, B6 och H2 godkända i testläge hos Stripe |
 | 4. Slutna betan och lansering | Juridik klar (avsnitt 9), integritetspolicy och villkor, supportadressen skapad, betatestare med riktiga betalningar | Mätetalen i avsnitt 10 uppfyllda under minst en vecka, inga öppna säkerhetsfynd |
@@ -397,6 +414,8 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 49. Första lösning lokalt | Den första lösningen installeras lokalt på Mac eller Linux, utan moln. | D18 |
 | 50. Simulerad Bokio | Bokföring via en adapter; en simulerad Bokio används först och riktiga Bokio kommer senare. | D19 |
 | 51. Bara Dalarna först | Första lösningen gäller fastigheter i Dalarnas län; länet är en inställning. | D20 |
+| 52. Egen statistik, inga kakor | Besöks- och användningsstatistik lagras i egen databas, utan kakor, utan IP-adress och utan tredjepartsverktyg. | T1, T2, T5 |
+| 53. Ingen spårning i mejl | Notiser mäts bara vid utskick; ingen spårningsbild och inga spårade länkar. | T4 |
 
 **Kvarstående frågor**
 
@@ -501,11 +520,11 @@ Villkoren är allmänna villkor för en webbtjänst (inte en EULA för installer
 ### 14.3 Integritetspolicy: utkast till innehåll
 
 - **Personuppgiftsansvarig:** \[bolaget, organisationsnummer, kontakt\].
-- **Uppgifter som lagras:** e-postadress, lösenord (endast som hash), vilka fastigheter och ytor som bevakas, bevakningar, skickade notiser, loggade godkännanden och köpintyg samt betalningsunderlag. Kortuppgifter lagras inte av Artbevakning utan hos betalningsleverantören. Administratörer kan, för support och med loggning, se en kunds bevakningar och notiser.
-- **Ändamål och rättslig grund:** leverera tjänsten (avtal), hantera betalning och bokföring (rättslig förpliktelse), säkerhet och missbruksskydd (berättigat intresse). Om beslutet blir samtycke för delar av detta anges det här.
+- **Uppgifter som lagras:** e-postadress, lösenord (endast som hash), vilka fastigheter och ytor som bevakas, bevakningar, skickade notiser, loggade godkännanden och köpintyg, betalningsunderlag samt besöks- och användningsstatistik (avsnitt 5.9). Kortuppgifter lagras inte av Artbevakning utan hos betalningsleverantören. Administratörer kan, för support och med loggning, se en kunds bevakningar och notiser.
+- **Ändamål och rättslig grund:** leverera tjänsten (avtal), hantera betalning och bokföring (rättslig förpliktelse), säkerhet och missbruksskydd samt statistik för drift och utveckling (berättigat intresse). Om beslutet blir samtycke för delar av detta anges det här.
 - **Underleverantörer:** betalningsleverantör, molnleverantör och e-postleverantör; Artbevakning tecknar personuppgiftsbiträdesavtal med dem. Namn och land anges i policyn.
 - **Överföring utanför EU/EES:** om någon underleverantör gör det beskrivs skyddet (t.ex. standardavtalsklausuler).
-- **Lagringstid:** så länge kontot finns; bokföringsunderlag enligt lag (normalt sju år); loggade godkännanden så länge det behövs som bevis.
+- **Lagringstid:** så länge kontot finns; bokföringsunderlag enligt lag (normalt sju år); loggade godkännanden så länge det behövs som bevis; besöks- och användningsstatistik enligt T7.
 - **Kundens rättigheter:** utdrag, rättelse, radering, begränsning, invändning och dataportabilitet, samt rätt att klaga hos Integritetsskyddsmyndigheten.
 
 ### 14.4 Avtal som inte behövs
