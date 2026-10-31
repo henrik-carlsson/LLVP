@@ -541,20 +541,20 @@ Större organisationer, till exempel skogsbolag, kommuner, försäkringsbolag oc
 | Rapporter | Månadsrapport per organisation: antal notiser, arealer och användning av avtalets areal. |
 | Påverkan på modellen | Ny typ av bevakning (område i stället för fastighet) och ett nytt begrepp, företagsavtal, i glossariet. Prismodellen och områdesbevakningen bör beslutas i en ADR innan bygget. |
 
-### 15.4 Värva en kund
+### 15.4 Bjuda in en kund
 
-En kund kan värva nya kunder, och både den som värvar och den som värvas får en rabatt på upp till 200 kr på sin nästa beställning. Inget av detta ingår i version 1.
+En kund kan bjuda in nya kunder, och både den som bjuder in och den som blir inbjuden får en rabatt på 50 % av sin nästa beställning, upp till 200 kr. Inget av detta ingår i version 1.
 
 | Del | Förslag |
 | --- | --- |
-| Värvning | Varje kund har en personlig värvningslänk eller kod som kunden delar själv. Den nya kunden registrerar sig via länken eller anger koden vid registreringen. Tjänsten skickar inga inbjudningar per e-post i kundens namn, eftersom oombedd e-postmarknadsföring kräver samtycke (kontrolleras med jurist). |
-| Rabattens storlek | Ett fast belopp på högst 200 kr exklusive moms, men aldrig mer än köpets belopp. Det är en ny sorts rabatt, eftersom alla övriga rabatter är procentuella. |
-| När den ges | Den värvade får rabatten på sitt första köp efter registreringen. Den som värvar får sin rabatt när den värvade har genomfört ett betalt köp, och den gäller kundens nästa köp. |
+| Värvning | Varje kund har en personlig inbjudningslänk eller kod som kunden delar själv. Den nya kunden registrerar sig via länken eller anger koden vid registreringen. Tjänsten skickar inga inbjudningar per e-post i kundens namn, eftersom oombedd e-postmarknadsföring kräver samtycke (kontrolleras med jurist). |
+| Rabattens storlek | 50 % av beställningens belopp före moms, högst 200 kr. Det är en ny sorts rabatt, procent med tak i kronor, eftersom övriga rabatter är procentuella utan tak. |
+| När den ges | Den inbjudna får rabatten på sitt första köp efter registreringen. Den som bjuder in kan tillgodogöra sig sin rabatt först när den inbjudna har genomfört sin första beställning (betalningen genomförd), och rabatten gäller då kundens nästa köp. |
 | Förhållande till andra rabatter | Regeln om en rabatt per köp gäller (B20): den som ger lägst pris. En värvningsrabatt som inte används för att en bättre rabatt gavs ligger kvar till nästa köp och förfaller efter 12 månader (förslag). |
-| Missbruksskydd | Man kan inte värva sitt eget organisationsnummer, ett organisationsnummer kan bara värvas en gång, och antalet belönade värvningar per kund och år begränsas (gräns att fastställa). Organisationsnumret kontrolleras bara till formatet i version 1, så skyddet är begränsat (B19). |
+| Missbruksskydd | Man kan inte bjuda in sitt eget organisationsnummer, ett organisationsnummer kan bara bjudas in en gång, och varje kund kan högst tillgodogöra sig tre inbjudningsrabatter totalt, räknat på de rabatter som utnyttjats och oavsett om kunden bjudit in eller blivit inbjuden. Organisationsnumret kontrolleras bara till formatet i version 1, så skyddet är begränsat (B19). |
 | Integritet | Den som värvar ser bara antalet lyckade värvningar, inte vem som registrerat sig, och den värvade ser inte vem som värvat (förslag). |
-| Administratör | Slå på och av programmet, ändra beloppet och gränsen, och se värvningar och utdelade rabatter, med loggning (A1). |
-| Påverkan på modellen | Ny rabattyp i kronor, ett värvnings-id på kontot och ett tillgodo per kund. Glossariet får termen värvningsrabatt, och sambandet med B20 bör beslutas i en ADR innan bygget. |
+| Administratör | Slå på och av programmet, ändra procenten, taket och antalet per kund, och se värvningar och utdelade rabatter, med loggning (A1). |
+| Påverkan på modellen | Ny rabattyp (procent med tak i kronor), ett inbjudnings-id på kontot, ett tillgodo och en räknare (högst tre) per kund. Glossariet får termen inbjudningsrabatt, och sambandet med B20 bör beslutas i en ADR innan bygget. |
 
 ## 16. Reklam på webbsidan (förslag)
 
