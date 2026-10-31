@@ -61,11 +61,11 @@ Vid avverkningsval den del av en bevakning som gäller en vald avverkningsanmäl
 _Avoid_: Delbevakning, underbevakning
 
 **Avverkningsanmälan**:
-En anmälan om avverkning till Skogsstyrelsen, med en yta och ett inkomdatum.
+En anmälan om avverkning till Skogsstyrelsen, med en yta och ett inkomdatum. I fjällnära skog och ädellövskog kan det också vara en ansökan om tillstånd, som Skogsstyrelsens fil redovisar på samma sätt.
 _Avoid_: Anmälan, avverkningsyta
 
 **Komplettering**:
-Tillägg av nya avverkningsanmälningar som nya rader i en pågående bevakning, var och en med egen bevakningsperiod, mot betalning.
+Tillägg av nya avverkningsanmälningar, eller av en utgången rad, som nya rader i en pågående bevakning, var och en med egen bevakningsperiod, mot betalning.
 _Avoid_: Tillägg
 
 **Förlängning**:

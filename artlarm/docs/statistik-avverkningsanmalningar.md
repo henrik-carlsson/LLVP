@@ -6,6 +6,7 @@ Underlag för prissättning och företagsavtal (PRD avsnitt 15.3). Framtaget 202
 
 - Filen innehåller inget om ägare. Fälten är län, kommun, ärendeår, beteckning, avverkningstyp, ändamål, skogstyp, inkomdatum och anmäld areal. Uppdelning på privatägd skog och bolag går alltså inte att göra ur filen; se avsnittet om ägare nedan.
 - Filen når bara tillbaka till 2021-10-26 och ger lägre siffror än Skogsstyrelsens officiella statistik: för 2025 ger filen 29 725 ärenden och 111 983 ha, medan Skogsstyrelsen anger 241 646 ha föryngringsavverkning i normal skog. Orsaken är inte utredd. Använd därför siffrorna nedan för fördelning mellan län och storlekar, inte som absoluta årsvolymer.
+- Filen har två klasser i fältet `AvverkningsanmalanKlass`: `Avverkningsamalan` (inkomdatum till och med 2026-09-14, 123 347 ytor) och `NyAvverkningsanmalan` (från 2026-09-15, 6 561 ytor). Takten är ungefär dubbelt så hög efter bytet, och skillnaden är inte utredd; siffror före och efter 15 september är därför kanske inte jämförbara.
 - Ett ärende kan ha flera ytor; här är ytorna sammanlagda per ärende (beteckning).
 - 2021 och 2026 är ofullständiga år (filen startar 26 okt 2021 och slutar 26 okt 2026).
 
