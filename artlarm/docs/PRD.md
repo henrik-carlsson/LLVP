@@ -226,6 +226,7 @@ Tjänsten bygger på fem externa tjänster; två av dem (SOS och Lantmäteriet) 
 | Kartlager för avverkningsanmälningar | Avgränsa bevakning till avverkningsanmälda ytor (P3) | **Provad (fil)** | Skogsstyrelsens nedladdningstjänst: rikstäckande GeoPackage (ca 69 MB, SWEREF 99 TM) med 129 997 ytor; ingen WFS hittad. Filen är provad, se resultatet nedan. Licens: CC0 1.0, öppna data enligt Skogsstyrelsens villkorssida (uppdaterad 2026-05-13); källhänvisning önskas men krävs inte. Filen uppdateras varje natt (uppgift från beställaren), så nya ytor upptäcks tidigast nästa dygn |
 | Stripe (eller likvärdig) | Betalning, kvitto | Ej påbörjad | Betalsätt som stöds för SEK, moms, webhooks, utbetalning till svenskt bankkonto |
 | E-postutskick | Notiser, sammanfattning, verifiering, återställning | Prototypen använder SMTP hos one.com | Byt till en leverantör för transaktionsmejl (t.ex. Amazon SES) med SPF/DKIM/DMARC för avsändardomänen |
+| Bokio (bokföring) | Verifikat och fakturor för köp och avgifter | Simuleras i första lösningen (D19) | Vilken integrationstyp som gäller. Enligt Bokios dokumentation får privata integrationer inte använda Company API och publika integrationer granskas av Bokio; se docs.bokio.se. Behövda behörigheter och hur Stripes utbetalningar och avgifter ska bokföras. |
 
 **Avverkningsanmälan som bevakningsyta.** När kunden väljer endast avverkningsanmälda ytor beräknas bevakad yta som skärningen mellan fastigheten och avverkningsanmälningarnas ytor. Systemet ska uppdatera lagret regelbundet och hantera att nya avverkningsanmälningar tillkommer under bevakningsperioden; ytan fryses vid köp, och nya ytor meddelas och kan läggas till (P8–P11). Eftersom källan är en rikstäckande fil på ca 69 MB hämtas den regelbundet och läggs i en rumslig databas i stället för att frågas live.
 
@@ -261,6 +262,9 @@ Tjänsten ska drivas på egen server eller i en molntjänst, till exempel AWS, o
 | D15 | Säkerhet | Simulerad betalning och mejlfångaren kan inte slås på i produktionsläge: tjänsten vägrar starta om skarpa Stripe-nycklar och simulerad betalning är påslagna samtidigt, och ett tydligt märke visas på alla sidor när betalningen är simulerad. |
 | D16 | Lokal provning | Lokalt kan tjänstens klocka ställas fram, så att kontrollen var 15:e minut, sammanfattningen kl 09:00, periodens slut, de 14 dagarna efter slutdatum och varukorgens 7 dagar går att pröva utan att vänta. Mot Artdatabanken, Lantmäteriet och Skogsstyrelsen används de riktiga tjänsterna med nycklar i en lokal .env-fil som inte checkas in; för tester finns inspelade svar så att de går utan nät och nycklar. Lokal seed-data har två exempelfastigheter (Mora Oxberg 95:1 och Östra Storbyn 85:1), ett testkonto och en testadministratör med fast tvåfaktorkod som bara gäller lokalt. |
 | D17 | Gränssnitt | Webbgränssnittet ska fungera på mobil, iPad och dator i vanliga webbläsare, från en skärmbredd på ca 375 px: responsiv layout, tabeller och datumfält per rad som staplas på smal skärm, och tryckytor som går att träffa med fingret (minst 44 px, förslag). Kassan (Stripe Checkout) och mejlens länkar ska fungera i mobilens webbläsare. Samma funktioner finns på alla enheter. |
+| D18 | Installation | Första lösningen ska gå att installera lokalt på en Mac eller en Linux-maskin (Apple-silikon och x86-64) med bara Docker och Git som förutsättningar: ett kommando för installation, ett för start, ett för stopp och ett som rensar den lokala datan, och en kort beskrivning. Ingen molnresurs behövs. Samma containerbilder används som på AWS (D12). |
+| D19 | Bokföring | Bokföring går genom en adapter med två lägen: simulerad Bokio och Bokio. Den simulerade tar emot anrop av samma slag som Bokios API (verifikat, fakturor och bilagor), visar dem i en enkel lokal lista som kan hämtas som CSV och kontaktar aldrig Bokio. Varje betald faktura (B7), kreditering och Stripe-avgift ger ett verifikat med intäkt, moms och avgift. Skiftet till Bokio sker via konfiguration, med en integrationstoken som hålls utanför koden. Riktiga Bokio ingår inte i första lösningen. |
+| D20 | Område | Första lösningen behöver bara fungera för fastigheter i Dalarnas län. En fastighet utanför länet avvisas vid sökningen med ett begripligt meddelande. Avverkningsfilen läses in filtrerad på Dalarnas län, observationssökningen begränsas till länet och fastighetsuppslagen görs bland länets 15 kommuner. Länet ska vara en inställning, så att fler län kan läggas till utan kodändring. |
 
 ## 9. Juridik, integritet och villkor
 
@@ -319,6 +323,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | P17, P18 | Med två avverkningsanmälningar med olika perioder ger ett fynd inom den ena radens yta men utanför dess period ingen notis, och ett fynd inom en annan rads period ger notis med rätt ärendenummer. Priset och fakturan har en rad per anmälan, även när ytorna överlappar. En utgången rad bevakas inte längre medan övriga rader fortsätter, och bevakningen visas som delvis utgången. |
 | B18–B21, A8–A10 | Med ett erbjudande på 20 % till ett visst klockslag får ett köp i kassan före klockslaget 20 % rabatt och ett köp efter det ingen. En kassa som öppnats före sluttiden behåller rabatten vid betalning efter sluttiden, inom kassans giltighet. En kund med ett nytt organisationsnummer får förstagångsrabatten på sitt första betalda köp men inte på det andra. Med erbjudande 20 %, förstagångsrabatt 30 % och rabattkod 10 % får köpet bara 30 % rabatt, och en rabattkod som ger mindre rabatt än den som gäller ger ett meddelande. Fakturan visar rabattens namn och procent. |
 | D17 | Registrering, ny bevakning med flera rader, varukorg, betalning och Mina bevakningar går att genomföra på en mobil (375 px bred) och på en iPad utan sidledes rullning och med alla knappar och fält nåbara med fingret. |
+| D18–D20 | På en ren Mac och en ren Linux-maskin med Docker och Git startar installationskommandot hela tjänsten. Ett simulerat köp av en bevakning för en fastighet i Dalarna ger en aktiv bevakning, en faktura, en notis i mejlfångaren och ett verifikat i den simulerade Bokio. En fastighet utanför Dalarna avvisas med ett begripligt meddelande. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -327,6 +332,7 @@ Leveransen delas i fem faser där varje fas har ett krav som måste vara uppfyll
 | Fas | Innehåll | Klart när |
 | --- | --- | --- |
 | 0. Prototyp | Bevakning, notiser, sammanfattning (levererat; flera mottagare i prototypen tas bort i produkten) | Provad mot riktiga datakällor (uppfyllt för SOS, Lantmäteriet och e-post) |
+| 0b. Första lösning (lokal) | Hela tjänsten lokalt på Mac eller Linux med Docker Compose (D12, D18), simulerad Stripe (D13) och simulerad Bokio (D19), för fastigheter i Dalarna (D20) | Acceptansen för D18–D20 uppfylld på både Mac och Linux |
 | 1. Grund för flera kunder | Konton och inloggning (K1–K8), PostgreSQL, separat worker, lokal körning med Docker Compose (D12), drift i molnet, e-post via SES, backup och övervakning | Två testkunder ser bara sina egna data i drift; prototypens funktioner fungerar onändrade |
 | 2. Avverkningsanmälan | Import av Skogsstyrelsens rikstäckande fil, skärning mellan fastighet och avverkningsanmälan (P3), regelbunden uppdatering, information om nya ytor och komplettering (P8–P12) | P3-kriteriet uppfyllt på minst två verkliga fastigheter; datakällans licens klarlagd |
 | 3. Bevakningsflöde och betalning | Bevakningsperiod med varning över 3 månader, varukorg, rabattkoder, förlängning (H4–H6), administration (A1–A6), betalningsadapter med simulerad betalning (D13) och Stripe i testläge (D14), webhooks, faktura, borttagning med bekräftelse | Acceptanskriterierna för P4, M1, B4, B6 och H2 godkända i testläge hos Stripe |
@@ -388,6 +394,9 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 46. Förstagångsrabatt | Procentuell rabatt på ett organisationsnummers första genomförda köp, på och av och med ändringsbar procent. | B19, A9 |
 | 47. En rabatt per köp | Bara den rabatt som ger lägst pris gäller; erbjudande, förstagångsrabatt och rabattkod kombineras inte. | B20, B21 |
 | 48. Mobil och iPad i webbläsaren | Version 1 har ett responsivt webbgränssnitt för mobil, iPad och dator; webbapp på hemskärmen och egen app är framtida utökningar. | D17 |
+| 49. Första lösning lokalt | Den första lösningen installeras lokalt på Mac eller Linux, utan moln. | D18 |
+| 50. Simulerad Bokio | Bokföring via en adapter; en simulerad Bokio används först och riktiga Bokio kommer senare. | D19 |
+| 51. Bara Dalarna först | Första lösningen gäller fastigheter i Dalarnas län; länet är en inställning. | D20 |
 
 **Kvarstående frågor**
 
@@ -665,7 +674,7 @@ Avgifterna i tabellen nedan räknas på beloppet inklusive 25 % moms, med faktur
 | Supportmejl | Befintlig brevlåda | Ingen extra kostnad |
 | Övervakning av drift och fel | Gratisnivå räcker troligen | Ej beräknad |
 | Jurist, bokföring och utveckling | Ej beräknade engångs- och löpande kostnader | Utanför det här avsnittet |
-| Lokal utveckling och simulerad betalning | Ingen extra kostnad: Docker, mejlfångaren och den simulerade betalningen är gratis, och Stripe i testläge kostar inget | Används före drift på AWS (D12–D16) |
+| Lokal utveckling, simulerad betalning och simulerad Bokio | Ingen extra kostnad: Docker, mejlfångaren, den simulerade betalningen och den simulerade Bokio är gratis, och Stripe i testläge kostar inget | Används före drift på AWS (D12–D20) |
 
 ### 17.4 Vad det betyder
 
