@@ -145,6 +145,9 @@ En administratör hanterar rabattkoder och grundpris; kundens sida av rabattkode
 | A5 | Administratören ser en lista över alla rabattkoder med rabatt, nuvarande grundpris och historik över prisändringar (förslag). |
 | A6 | Vanliga kunder ska inte kunna nå administrationen, varken via gränssnittet eller API:t. |
 | A7 | Administratörer har skrivskyddad insäkt i en kunds bevakningar och notiser, bara i samband med ett supportärende, och varje uppslag loggas (vem, vad, när). De kan inte ändra kundens bevakningar eller se lösenord. Integritetspolicyn anger insäkten. |
+| A8 | En administratör ska kunna skapa, ändra och avsluta ett erbjudande (namn, procent, start och slut). Ett pågående erbjudande kan avslutas i förtid men inte ändras bakåt, och redan gjorda köp påverkas inte. Före aktivering visas en bekräftelse med procent och tid, och ändringen loggas (A1). |
+| A9 | En administratör ska kunna slå på och av förstagångsrabatten och ändra procenten. Ändringen gäller nya köp och loggas. |
+| A10 | Administratören ser en lista över erbjudanden (kommande, pågående och avslutade) och förstagångsrabattens nuvarande läge, med historik (vem, vad, när) och antal köp som fick varje rabatt (förslag). |
 
 ### 5.8 Vilka observationer man får notiser om
 
@@ -197,6 +200,10 @@ Kunden betalar 2 kr per hektar och dag för bevakad yta, i förskott, och priset
 | B15 | Blir totalen 0 kr (rabatt 100 %) aktiveras bevakningarna utan betalning hos Stripe (förslag). |
 | B16 | Ytan avrundas uppåt per bevakning, vid avverkningsval per rad, till närmaste 0,1 ha (aldrig nedåt) och priset räknas exakt i öre. Minsta belopp per köp är 200 kr, räknat på varukorgens fullpris före rabatt och exklusive moms; är fullpriset lägre debiteras 200 kr. |
 | B17 | Priset låses när kunden går till kassan. Varukorgen sparas 7 dagar; öppnas kassan igen räknas priset om. En betalning gäller hela varukorgen: antingen aktiveras alla bevakningar eller ingen. En misslyckad betalning lämnar varukorgen kvar. |
+| B18 | Ett tidsbegränsat erbjudande är en procentuell rabatt som gäller alla kunder automatiskt, utan kod, på hela varukorgen (alla rader, även kompletteringar och förlängningar). Det har namn, rabatt i procent (1–99), startdatum och slutdatum med klockslag i svensk tid. Vilket erbjudande som gäller avgörs när priset låses vid kassan (B17); en betalning som slutförs efter erbjudandets slut behåller rabatten om kassan öppnades under erbjudandet (kassans giltighet högst 24 timmar, förslag). Högst ett erbjudande får vara aktivt åt gången. |
+| B19 | Förstagångsrabatten är en procentuell rabatt (1–99) på ett organisationsnummers första genomförda köp. Den ges automatiskt i kassan och kan slås på och av, och procenten kan ändras, av en administratör. Ett köp räknas som första när betalningen genomförts; ett köp på 0 kr räknas inte. Rabatten följer organisationsnumret (B10) så att den inte tas flera gånger genom att skapa nya konton; eftersom numret bara formatkontrolleras i version 1 är skyddet begränsat. |
+| B20 | Ett köp får en enda rabatt: den som ger lägst pris av erbjudandet, förstagångsrabatten och rabattkoden. Rabatter kombineras inte (jfr B14). Anger kunden en rabattkod som ger mindre rabatt än den som redan gäller visas ett meddelande och den bättre rabatten behålls. |
+| B21 | Gällande erbjudande (namn, procent och slutdatum) visas på sidan Ny bevakning och i varukorgen, och den rabatt som används visas på en egen rad med belopp före moms och nytt totalbelopp. Rabattens namn och procent sparas på köpet och skrivs på fakturan och kvittot (B7, B14). Rabatten räknas på varukorgens belopp före moms; beloppstaket (B11) och minsta beloppet (B16) räknas på fullpriset före rabatt. |
 
 **Räkneexempel (förslag på beräkning, belopp utan moms):**
 
@@ -309,6 +316,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | B17, H7, D11, A7 | En misslyckad betalning aktiverar ingen bevakning och lämnar varukorgen kvar. En utgången bevakning kan inte tas bort och döljs efter 12 månader. Ett källavbrott över 24 timmar ger ett mejl om försenade notiser. Ett administratörsuppslag av en kunds bevakning loggas. |
 | D12–D15 | Med ett kommando startar hela tjänsten lokalt, och ett simulerat köp av en bevakning ger en aktiv bevakning, en faktura och ett mejl i mejlfångaren. En misslyckad simulerad betalning aktiverar ingenting. Skarpa Stripe-nycklar tillsammans med simulerad betalning stoppar starten. |
 | P17, P18 | Med två avverkningsanmälningar med olika perioder ger ett fynd inom den ena radens yta men utanför dess period ingen notis, och ett fynd inom en annan rads period ger notis med rätt ärendenummer. Priset och fakturan har en rad per anmälan, även när ytorna överlappar. En utgången rad bevakas inte längre medan övriga rader fortsätter, och bevakningen visas som delvis utgången. |
+| B18–B21, A8–A10 | Med ett erbjudande på 20 % till ett visst klockslag får ett köp i kassan före klockslaget 20 % rabatt och ett köp efter det ingen. En kassa som öppnats före sluttiden behåller rabatten vid betalning efter sluttiden, inom kassans giltighet. En kund med ett nytt organisationsnummer får förstagångsrabatten på sitt första betalda köp men inte på det andra. Med erbjudande 20 %, förstagångsrabatt 30 % och rabattkod 10 % får köpet bara 30 % rabatt, och en rabattkod som ger mindre rabatt än den som gäller ger ett meddelande. Fakturan visar rabattens namn och procent. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -374,6 +382,9 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 42. Egen period per avverkningsanmälan | Vid avverkningsval har varje vald anmälan egen period, yta och eget pris; bevakningen är kvar som enhet för köp och borttagning. | P3–P5, P7, P8, P11, P13–P15, P17, B2, B7, B9, B16, H3–H5 |
 | 43. Överlapp prissätts var för sig | Anmälningar som överlappar i yta och tid prissätts var och en för sig, utan sammanslagning. | P18 |
 | 44. Hel bevakning tas bort | Enskilda rader kan inte tas bort i version 1; bara hela bevakningen. | H1 |
+| 45. Erbjudande för alla | Tidsbegränsad procentuell rabatt utan kod som gäller alla kunder automatiskt, skapad av en administratör; högst ett aktivt åt gången. | B18, A8, A10 |
+| 46. Förstagångsrabatt | Procentuell rabatt på ett organisationsnummers första genomförda köp, på och av och med ändringsbar procent. | B19, A9 |
+| 47. En rabatt per köp | Bara den rabatt som ger lägst pris gäller; erbjudande, förstagångsrabatt och rabattkod kombineras inte. | B20, B21 |
 
 **Kvarstående frågor**
 
@@ -390,6 +401,7 @@ Inga frågor återstår just nu. Nya frågor som uppstår under arbetet läggs t
 | Pris och yta stämmer inte (fråga 1–2) | Missnöjda kunder, tvister utan återbetalningsmöjlighet | Beslutat: ytan fryses vid köp och köp blockeras vid 0 ha; visa areal och pris tydligt innan betalning |
 | Juridik kring ångerrätt och ingen återbetalning | Villkoren kan underkännas mot konsumenter | Jurist gör genomgång innan lansering |
 | Prototypens delade databasanslutning och enprocessdesign | Dubbletter och tappade notiser vid flera instanser | PostgreSQL och en worker med lås (D2, D3) |
+| Rabatter urholkar intäkten | Ett erbjudande på 50 % kräver dubbelt så många köp för samma intäkt, och en felaktigt inställd procent ger förlust. | Procent högst 99, slutdatum obligatoriskt, bekräftelse före aktivering och loggning (A8). |
 
 ## 13. Skärmbildsförslag
 
@@ -405,13 +417,13 @@ Kontot skapas när e-post, lösenord och båda godkännandena finns (K1, K7, K8)
 
 ![Skärmbild 2: ny bevakning med pris](img/skarmbild-2-ny-bevakning.png)
 
-Fastigheter, valet "endast avverkningsanmälda ytor" per fastighet med en lista där avverkningsanmälningar kryssas i (P13), start- och slutdatum och pris för varje anmälan, förvalda enligt P14 (P17), bevakningsperiod per rad (med varning över 3 månader), kontots mottagaradress samlas på en sida, och priset visas innan varukorgen (P1–P7, M1). I bilden har rad 2 kortats och fått en kortare period än de andra, och priset räknas per rad. Valet av daglig sammanfattning görs för kontot (S1).
+Fastigheter, valet "endast avverkningsanmälda ytor" per fastighet med en lista där avverkningsanmälningar kryssas i (P13), start- och slutdatum och pris för varje anmälan, förvalda enligt P14 (P17), bevakningsperiod per rad (med varning över 3 månader), kontots mottagaradress samlas på en sida, och priset visas innan varukorgen (P1–P7, M1). I bilden har rad 2 kortats och fått en kortare period än de andra, och priset räknas per rad. Gällande erbjudande visas ovanför priset (B21). Valet av daglig sammanfattning görs för kontot (S1).
 
 ### 13.3 Varukorg och betalning
 
 ![Skärmbild 3: varukorg och betalning](img/skarmbild-3-varukorg.png)
 
-Två bevakningar betalas med en betalning (B4, B5). Oxberg visas uppdelad i en rad per avverkningsanmälan med egen period och eget belopp (P17, B7). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Köparen intygar också näringsverksamhet och anger organisationsnummer (B10).
+Två bevakningar betalas med en betalning (B4, B5). Oxberg visas uppdelad i en rad per avverkningsanmälan med egen period och eget belopp (P17, B7). Ett pågående erbjudande dras av på en egen rad, tillsammans med en ruta för rabattkod; bara den bästa rabatten gäller (B18, B20, B21). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Köparen intygar också näringsverksamhet och anger organisationsnummer (B10).
 
 ### 13.4 Mina bevakningar
 
@@ -583,7 +595,7 @@ Avgifterna i tabellen nedan räknas på beloppet inklusive 25 % moms, med faktur
 | --- | --- | --- | --- | --- |
 | 200 kr (minsta belopp) | 250 kr | 7,80 kr | 3,9 % | 11,05 kr |
 | 301,60 kr (en bevakning med tre rader, skärmbild 2) | 377,00 kr | 10,85 kr | 3,6 % | 15,75 kr |
-| 1 049,60 kr (varukorgen, skärmbild 3) | 1 312,00 kr | 33,29 kr | 3,2 % | 50,34 kr |
+| 1 049,60 kr (varukorgen före rabatt, skärmbild 3) | 1 312,00 kr | 33,29 kr | 3,2 % | 50,34 kr |
 | 5 000 kr (beloppstaket) | 6 250 kr | 151,80 kr | 3,0 % | 233,05 kr |
 
 ### 17.3 Övriga tjänster

@@ -30,6 +30,14 @@ _Avoid_: Maxbelopp, spärr
 En kod med en procentuell rabatt på varukorgens belopp.
 _Avoid_: Kupong, kampanjkod
 
+**Erbjudande**:
+En tidsbegränsad procentuell rabatt som gäller alla kunder automatiskt, utan kod, och som en administratör skapar med start och slut.
+_Avoid_: Kampanj, utförsäljning
+
+**Förstagångsrabatt**:
+En procentuell rabatt på ett organisationsnummers första genomförda köp.
+_Avoid_: Välkomstrabatt, nykundsrabatt
+
 ### Bevakningen
 
 **Bevakning**:
