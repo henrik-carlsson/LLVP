@@ -21,6 +21,14 @@
     "cop_min": 1.8,
     "cop_max": 5.0,
     "pmax_kw_at_7c": 4.0,
-    "pmax_derate_kw_per_k": 0.05
-  }
+    "pmax_derate_kw_per_k": 0.05,
+    "forecast_sd_base_k": 0.0,
+    "forecast_sd_per_hour_k": 0.0,
+    "forecast_seed": 1
+  },
+  "forecast_days": 5,
+  "lookahead_hours": 0,
+  "cold_trigger_c": -8.0,
+  "precold_preheat_c": 6.0,
+  "precold_mode": "all"
 }
