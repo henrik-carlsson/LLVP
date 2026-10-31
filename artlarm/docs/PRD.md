@@ -450,11 +450,11 @@ Notisen innehåller art, tidpunkt, fastighet och länk till observationen (L2), 
 
 Två bilder visar samma flöden på en mobil (D17): fälten staplas, datumfälten ligger bredvid varandra på varje rad, och knappar och fält är minst 44 px höga.
 
-![Skärmbild 7: annonsplatser i bevakningslistan](img/skarmbild-7-annonsplatser.png)
+![Skärmbild 8: mobil, registrering och ny bevakning](img/skarmbild-8-mobil-registrering-ny-bevakning.png)
 
 På mobilen blir varje avverkningsanmälan ett kort med egna datum och pris (P13, P14, P17), och erbjudandet visas ovanför priset (B21).
 
-![Skärmbild 8: mobil, registrering och ny bevakning](img/skarmbild-8-mobil-registrering-ny-bevakning.png)
+![Skärmbild 9: mobil, varukorg och mina bevakningar](img/skarmbild-9-mobil-varukorg-bevakningar.png)
 
 Varukorgen visar bevakningens rader under varandra, och Mina bevakningar visar en bevakning som ett kort med raderna under, med status och Förläng per rad (H3, H4, P17).
 
@@ -582,7 +582,7 @@ En kund kan bjuda in nya kunder, och både den som bjuder in och den som blir in
 
 Webbsidan förbereds för reklam genom fasta annonsplatser och ett administrationsstöd, men reklamen är avstängd tills ett beslut tas. Förslaget håller reklamen utanför allt som rör pengar, villkor och notiser, och börjar med direktsålda annonser utan spårning så att ingen samtyckesbanner behövs.
 
-![Skärmbild 9: mobil, varukorg och mina bevakningar](img/skarmbild-9-mobil-varukorg-bevakningar.png)
+![Skärmbild 7: annonsplatser i bevakningslistan](img/skarmbild-7-annonsplatser.png)
 
 Annonsplatserna i bilden finns bara på sidorna "Mina bevakningar" och "Ny bevakning": en sidokolumn på bred skärm och en banderoll i listan, som på smal skärm tar sidokolumnens plats.
 
