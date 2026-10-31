@@ -446,6 +446,18 @@ Till vänster en bevakning (H1, H2), till höger kontoavslut (K6). Båda kräver
 
 Notisen innehåller art, tidpunkt, fastighet och länk till observationen (L2), med tydlig markering när läget är osäkert (L3). Vid avverkningsval anger notisen även avverkningsanmälans ärendenummer. Sammanfattningen kommer kl 09:00, ett mejl per adress, och listar alla fastigheter även där inget registrerats (S2, S3). Exemplen bygger på de riktiga notiserna för Oxberg 95:1 från prototypen.
 
+### 13.7 Mobil
+
+Två bilder visar samma flöden på en mobil (D17): fälten staplas, datumfälten ligger bredvid varandra på varje rad, och knappar och fält är minst 44 px höga.
+
+![Skärmbild 7: annonsplatser i bevakningslistan](img/skarmbild-7-annonsplatser.png)
+
+På mobilen blir varje avverkningsanmälan ett kort med egna datum och pris (P13, P14, P17), och erbjudandet visas ovanför priset (B21).
+
+![Skärmbild 8: mobil, registrering och ny bevakning](img/skarmbild-8-mobil-registrering-ny-bevakning.png)
+
+Varukorgen visar bevakningens rader under varandra, och Mina bevakningar visar en bevakning som ett kort med raderna under, med status och Förläng per rad (H3, H4, P17).
+
 ## 14. Avtal och bekräftelser (förslag)
 
 Kunden bekräftar två dokument vid registrering och två saker vid varje köp; fler avtal behövs inte, eftersom bara kontoinnehavarens egen e-postadress får notiser. Texterna nedan är utkast som juristen ska granska och fylla i (bolagsnamn, organisationsnummer, tvistelösning).
@@ -570,7 +582,7 @@ En kund kan bjuda in nya kunder, och både den som bjuder in och den som blir in
 
 Webbsidan förbereds för reklam genom fasta annonsplatser och ett administrationsstöd, men reklamen är avstängd tills ett beslut tas. Förslaget håller reklamen utanför allt som rör pengar, villkor och notiser, och börjar med direktsålda annonser utan spårning så att ingen samtyckesbanner behövs.
 
-![Skärmbild 7: annonsplatser i bevakningslistan](img/skarmbild-7-annonsplatser.png)
+![Skärmbild 9: mobil, varukorg och mina bevakningar](img/skarmbild-9-mobil-varukorg-bevakningar.png)
 
 Annonsplatserna i bilden finns bara på sidorna "Mina bevakningar" och "Ny bevakning": en sidokolumn på bred skärm och en banderoll i listan, som på smal skärm tar sidokolumnens plats.
 
