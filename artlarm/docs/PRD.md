@@ -58,7 +58,7 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 
 | ID | Krav |
 | --- | --- |
-| K1 | En kund ska kunna skapa ett personligt konto med e-postadress och lösenord. |
+| K1 | En kund ska kunna skapa ett konto för sitt företag med e-postadress, lösenord och organisationsnummer (K9). |
 | K2 | E-postadressen ska verifieras med länk innan bevakningar kan betalas (förslag). |
 | K3 | Kunden ska kunna logga in, logga ut och återställa lösenord via e-post. Version 1 har e-post och lösenord; valfri tvåfaktor för kunder och BankID är möjliga senare utökningar (avsnitt 15). |
 | K4 | Lösenord lagras hashade med modern algoritm (t.ex. Argon2 eller bcrypt); inloggningsförsök begränsas mot gissning. |
@@ -66,6 +66,8 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 | K6 | Kunden ska kunna avsluta sitt konto. Alla pågående bevakningar tas då också bort och bevakningen upphör direkt. kunden måste först bekräfta, efter att ha informerats om att ingen återbetalning sker och vilka bevakningar som tas bort (som H2). Personuppgifter raderas enligt avsnitt 9, utom det som måste sparas för bokföring. |
 | K7 | Vid registrering ska kunden aktivt godkänna att hens uppgifter lagras och behandlas (GDPR), efter att ha läst integritetspolicyn. Utan godkännande skapas inget konto. Rutans text innehåller en länk till integritetspolicyn. Godkännande, policyns version och tidpunkt loggas. Den rättsliga grunden fastställs i avsnitt 9. |
 | K8 | Vid registrering ska kunden aktivt godkänna användarvillkor som bland annat anger att ingen återbetalning sker, ansvarsbegränsning och datakällornas begränsningar. Rutans text innehåller en länk till användarvillkoren, som kan läsas innan godkännandet. Godkännande, villkorens version och tidpunkt loggas. Vid väsentligt ändrade villkor ska kunden godkänna de nya vid nästa inloggning. Utkast till villkoren och till integritetspolicyn finns i avsnitt 14. |
+| K9 | Vid registrering ska kunden ange organisationsnummer (tio siffror, svenskt) och aktivt intyga med en ikryssad ruta att registreringen sker i näringsverksamhet. Numret formatkontrolleras men kontrolleras inte mot register i version 1. Utan nummer och intyg skapas inget konto. Intyg, organisationsnummer och tidpunkt sparas och skrivs på kvitto och faktura. |
+| K10 | Ett organisationsnummer kan bara ha ett konto i version 1. Numret låses på kontot efter registreringen och kan ändras bara av support. Flera användare per organisation är en framtida utökning (avsnitt 15.2 och 15.3). Enskilda firmor tillåts; då är organisationsnumret ett personnummer och behandlas som personuppgift: det visas aldrig i mejl eller statistik och skrivs bara på fakturan och i kontots egna inställningar (avsnitt 9). |
 
 ### 5.2 Bevakningar och fastigheter
 
@@ -89,6 +91,7 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 | P16 | Fastighetens geometri och de valda avverkningsanmälningarnas ytor sparas som en ögonblicksbild vid köp och används under hela bevakningen, även om Lantmäteriets eller Skogsstyrelsens data ändras senare. |
 | P17 | Vid avverkningsval har varje vald avverkningsanmälan egen period, egen yta och eget pris (en rad). Ett fynd ger notis för en rad bara om det ligger inom radens yta och period, och notisen anger ärendenummer. Bevakningen är en kundens enhet för köp, varukorg och borttagning; raderna har egen status och egen förlängning. |
 | P18 | Valda avverkningsanmälningar prissätts var och en för sig, även när deras ytor och perioder överlappar; ingen sammanslagning av ytor görs. Fakturan visar därför en rad per anmälan. |
+| P19 | Ändras eller försvinner en avverkningsanmälan ur Skogsstyrelsens fil efter köpet fortsätter raden med den frusna ytan (P16), utan återbetalning (B8). Raden får en markering i Mina bevakningar ("anmälan finns inte längre hos Skogsstyrelsen"), men kunden får ingen särskild notis. |
 
 ### 5.3 Mottagare
 
@@ -110,6 +113,7 @@ Kraven är numrerade så att de kan refereras i test och uppföljning. "Ska" är
 | L7 | Varje kontroll som hittar nya observationer skickar ett enda mejl per bevakning med alla nya observationer i en lista (art, tid, länk, ärendenummer vid avverkningsval, markering för osäkert läge), sorterad efter observationernas klockslag. En inventering som pagår längre än tiden mellan kontrollerna kan därför ge flera mejl, ett för varje kontroll där nya observationer har tillkommit. |
 | L8 | Tjänsten gör en kontroll var 15:e minut. Löftet till kunden är en notis inom 30 minuter från att observationen syns i SOS (95 % av notiserna). SOS visade i en mätning 2026-10-27 nya observationer ca 10 minuter efter rapport. Avverkningsfilen hämtas nattligen. |
 | L9 | Ett mejl visar högst de 50 senaste observationerna och antalet övriga. Alla träffar ligger som CSV-bilaga. Det gäller både startrapport och vanliga notiser vid stor inventering. |
+| L10 | Ett fynd som ligger inom flera raders yta och period ger en enda notis per bevakning, som listar alla matchande ärendenummer (L4, P17). |
 
 ### 5.5 Daglig sammanfattning
 
@@ -204,10 +208,10 @@ Kunden betalar 2 kr per hektar och dag för bevakad yta, i förskott, och priset
 | B4 | Kunden ska kunna lägga flera bevakningar i en varukorg och betala allt på en gång, med en enda betalning. |
 | B5 | Betalning görs med en extern betalningslösning, t.ex. Stripe Checkout. Kortuppgifter hanteras aldrig av Artbevakning. Version 1 stöder kortbetalning; Swish och faktura kan komma senare. |
 | B6 | En bevakning aktiveras först när betalningen bekräftats av betalningsleverantörens webhook. Webhooks hanteras idempotent så att samma betalning inte aktiverar två gånger. |
-| B7 | Kunden får en betald faktura (via Stripe Invoicing) med specifikation per bevakning (fastighet, hektar, dagar, belopp, moms) och vid avverkningsval per avverkningsanmälan (ärendenummer, hektar, period, dagar, belopp), som mejlas. Moms beräknas med Stripe Tax: 25 %, och omvänd skattskyldighet för EU-företag med giltigt momsnummer. Kunden anger organisationsnummer (B10) och fakturaadress i kassan. |
+| B7 | Kunden får en betald faktura (via Stripe Invoicing) med specifikation per bevakning (fastighet, hektar, dagar, belopp, moms) och vid avverkningsval per avverkningsanmälan (ärendenummer, hektar, period, dagar, belopp), som mejlas. Moms beräknas med Stripe Tax: 25 % för svenska företag; EU-företag med momsnummer och omvänd skattskyldighet är en framtida utökning. Fakturan använder kontots organisationsnummer (K9) och kunden anger fakturaadress i kassan. |
 | B8 | En borttagen bevakning ger ingen återbetalning. Kunden informeras vid köp och vid borttagning och måste bekräfta (H2). |
 | B9 | Dagar räknas från och med startdatum till och med slutdatum och inkluderar dagar före köpdatum. Vid avverkningsval räknas dagarna per rad. Perioden har ingen fast längdgräns; en varning visas över 3 månader (P4). |
-| B10 | Tjänsten säljs till företag och yrkesutförare. Priser visas exklusive moms och moms läggs på vid betalning. Köparen intygar vid köp med en ikryssad ruta att det sker i näringsverksamhet och anger organisationsnummer (obligatoriskt). Numret formatkontrolleras men kontrolleras inte mot register i version 1. Intyg, organisationsnummer och tidpunkt sparas och skrivs på kvittot. |
+| B10 | Tjänsten säljs till företag och yrkesutförare. Priser visas exklusive moms och moms läggs på vid betalning. Intyget om näringsverksamhet och organisationsnumret anges vid registreringen (K9) och frågas inte om vid köp; kassan visar vem som faktureras. Kontots uppgifter skrivs på kvitto och faktura. |
 | B11 | Ett konfigurerbart tak per köp (belopp eller hektar) gäller. Över taket visas "kontakta oss" i stället för betalning. Taket är initialt 5 000 kr per köp, ändras av en administratör (förslag) och är den hårda gränsen; det finns ingen separat gräns för periodens längd. Taket gäller varukorgens fullpris före rabatt, och komplettering och förlängning räknas som övriga rader i samma varukorg. |
 | B12 | Support sker via e-post till support@mjukvaruverkstan.se, som visas i gränssnittet och i mejlen. Adressen finns inte ännu och måste skapas före lansering. Svar ges inom 3 arbetsdagar och svarstiden anges för kunden. Återbetalning görs bara manuellt, via Stripe, när fel uppstått hos Artbevakning. |
 | B13 | Kunden ska kunna ange en rabattkod i varukorgen. En giltig kod ger en procentuell rabatt på varukorgens belopp före moms, som visas på en egen rad med nytt totalbelopp. En ogiltig eller borttagen kod ger ett tydligt felmeddelande. |
@@ -216,9 +220,10 @@ Kunden betalar 2 kr per hektar och dag för bevakad yta, i förskott, och priset
 | B16 | Ytan avrundas uppåt per bevakning, vid avverkningsval per rad, till närmaste 0,1 ha (aldrig nedåt) och priset räknas exakt i öre. Minsta belopp per köp är 200 kr, räknat på varukorgens fullpris före rabatt och exklusive moms; är fullpriset lägre debiteras 200 kr. |
 | B17 | Priset låses när kunden går till kassan. Varukorgen sparas 7 dagar; öppnas kassan igen räknas priset om. En betalning gäller hela varukorgen: antingen aktiveras alla bevakningar eller ingen. En misslyckad betalning lämnar varukorgen kvar. |
 | B18 | Ett tidsbegränsat erbjudande är en procentuell rabatt som gäller alla kunder automatiskt, utan kod, på hela varukorgen (alla rader, även kompletteringar och förlängningar). Det har namn, rabatt i procent (1–99), startdatum och slutdatum med klockslag i svensk tid. Vilket erbjudande som gäller avgörs när priset låses vid kassan (B17); en betalning som slutförs efter erbjudandets slut behåller rabatten om kassan öppnades under erbjudandet (kassans giltighet högst 24 timmar, förslag). Högst ett erbjudande får vara aktivt åt gången. |
-| B19 | Förstagångsrabatten är en procentuell rabatt (1–99) på ett organisationsnummers första genomförda köp. Den ges automatiskt i kassan och kan slås på och av, och procenten kan ändras, av en administratör. Ett köp räknas som första när betalningen genomförts; ett köp på 0 kr räknas inte. Rabatten följer organisationsnumret (B10) så att den inte tas flera gånger genom att skapa nya konton; eftersom numret bara formatkontrolleras i version 1 är skyddet begränsat. |
+| B19 | Förstagångsrabatten är en procentuell rabatt (1–99) på ett organisationsnummers första genomförda köp. Den ges automatiskt i kassan och kan slås på och av, och procenten kan ändras, av en administratör. Ett köp räknas som första när betalningen genomförts; ett köp på 0 kr räknas inte. Rabatten följer kontots organisationsnummer (K9, K10); eftersom numret bara formatkontrolleras i version 1 kan någon registrera ett annat nummer, så skyddet är begränsat. |
 | B20 | Ett köp får en enda rabatt: den som ger lägst pris av erbjudandet, förstagångsrabatten och rabattkoden. Rabatter kombineras inte (jfr B14). Anger kunden en rabattkod som ger mindre rabatt än den som redan gäller visas ett meddelande och den bättre rabatten behålls. |
 | B21 | Gällande erbjudande (namn, procent och slutdatum) visas på sidan Ny bevakning och i varukorgen, och den rabatt som används visas på en egen rad med belopp före moms och nytt totalbelopp. Rabattens namn och procent sparas på köpet och skrivs på fakturan och kvittot (B7, B14). Rabatten räknas på varukorgens belopp före moms; beloppstaket (B11) och minsta beloppet (B16) räknas på fullpriset före rabatt. |
+| B22 | Vid full återbetalning av ett köp (B12) återställs förstagångsrabatten och den inbjudnas rabatt. Inbjudarens rabatt dras tillbaka om den inte hunnit användas; har den redan använts sker ingen justering. |
 
 **Räkneexempel (förslag på beräkning, belopp utan moms):**
 
@@ -278,8 +283,10 @@ Tjänsten ska drivas på egen server eller i en molntjänst, till exempel AWS, o
 | D16 | Lokal provning | Lokalt kan tjänstens klocka ställas fram, så att kontrollen var 15:e minut, sammanfattningen kl 09:00, periodens slut, de 14 dagarna efter slutdatum och varukorgens 7 dagar går att pröva utan att vänta. Mot Artdatabanken, Lantmäteriet och Skogsstyrelsen används de riktiga tjänsterna med nycklar i en lokal .env-fil som inte checkas in; för tester finns inspelade svar så att de går utan nät och nycklar. Lokal seed-data har två exempelfastigheter (Mora Oxberg 95:1 och Östra Storbyn 85:1), ett testkonto och en testadministratör med fast tvåfaktorkod som bara gäller lokalt. |
 | D17 | Gränssnitt | Webbgränssnittet ska fungera på mobil, iPad och dator i vanliga webbläsare, från en skärmbredd på ca 375 px: responsiv layout, tabeller och datumfält per rad som staplas på smal skärm, och tryckytor som går att träffa med fingret (minst 44 px, förslag). Kassan (Stripe Checkout) och mejlens länkar ska fungera i mobilens webbläsare. Samma funktioner finns på alla enheter. |
 | D18 | Installation | Första lösningen ska gå att installera lokalt på en Mac eller en Linux-maskin (Apple-silikon och x86-64) med bara Docker och Git som förutsättningar: ett kommando för installation, ett för start, ett för stopp och ett som rensar den lokala datan, och en kort beskrivning. Ingen molnresurs behövs. Samma containerbilder används som på AWS (D12). |
-| D19 | Bokföring | Bokföring går genom en adapter med två lägen: simulerad Bokio och Bokio. Den simulerade tar emot anrop av samma slag som Bokios API (verifikat, fakturor och bilagor), visar dem i en enkel lokal lista som kan hämtas som CSV och kontaktar aldrig Bokio. Varje betald faktura (B7), kreditering och Stripe-avgift ger ett verifikat med intäkt, moms och avgift. Skiftet till Bokio sker via konfiguration, med en integrationstoken som hålls utanför koden. Riktiga Bokio ingår inte i första lösningen. |
+| D19 | Bokföring | Bokföring går genom en adapter med två lägen: simulerad Bokio och Bokio. Den simulerade tar emot anrop av samma slag som Bokios API (verifikat, fakturor och bilagor), visar dem i en enkel lokal lista som kan hämtas som CSV och kontaktar aldrig Bokio. Varje betald faktura (B7), kreditering och Stripe-avgift ger ett verifikat med intäkt, moms och avgift. Skiftet till Bokio sker via konfiguration, med en integrationstoken som hålls utanför koden. Riktiga Bokio ingår inte i första lösningen. Kontona i verifikaten (intäkt, utgående moms, avgift och utbetalning) är en inställning med BAS-standardens konton som utgångspunkt; kontoplanen fastställs av bokföraren innan riktiga Bokio kopplas in. |
 | D20 | Område | Första lösningen behöver bara fungera för fastigheter i Dalarnas län. En fastighet utanför länet avvisas vid sökningen med ett begripligt meddelande. Avverkningsfilen läses in filtrerad på Dalarnas län, observationssökningen begränsas till länet och fastighetsuppslagen görs bland länets 15 kommuner. Länet ska vara en inställning, så att fler län kan läggas till utan kodändring. |
+| D21 | Sökning | Sökningen mot SOS görs en gång per bevakning och kontroll, över de aktiva radernas samlade yta och tidigaste startdatum. Filtreringen på yta och period per rad görs i tjänstens egen databas, och utgångna rader ingår inte i sökningen. |
+| D22 | Språk | Gränssnitt, mejl, villkor och fakturor är på svenska i version 1. Andra språk är en framtida utökning. |
 
 ## 9. Juridik, integritet och villkor
 
@@ -289,13 +296,14 @@ Innan tjänsten tas betalt för behöver följande kläras av jurist; punkterna 
 | --- | --- |
 | Personuppgifter (GDPR) | Tjänsten lagrar kundens e-postadress och kan lagra telefonnummer, plus uppgifter om vilka fastigheter en person bevakar. Behöver integritetspolicy, laglig grund, personuppgiftsbiträdesavtal med molnleverantör, Stripe och e-postleverantör, samt rutin för radering och utdrag. Aktivt godkännande vid registrering (K7) är ett krav från beställaren; om det juridiskt ska vara samtycke eller information, och vilken rättslig grund som gäller, avgörs av juristen. |
 | Mottagare | Endast kontoinnehavarens egen e-postadress får notiser. Det undviker att Artbevakning hanterar uppgifter om tredje part och därmed blir personuppgiftsbiträde åt kunden för andra mottagares adresser (juristen bekräftar). |
-| Villkor och återbetalning | Ingen återbetalning när en bevakning tas bort. Kunden informeras vid köp och vid borttagning och bekräftar (H2, B8). Om konsumenter ska kunna köpa måste ångerrätt vid distansköp och samtycke till direkt påbörjad tjänst hanteras; om tjänsten riktas till företag och yrkesutförare kan det förenklas. Beslut: tjänsten säljs till företag och yrkesutförare, vilket förenklar konsumentreglerna; köparen intygar med en ruta och anger organisationsnummer vid köp (B10). |
+| Villkor och återbetalning | Ingen återbetalning när en bevakning tas bort. Kunden informeras vid köp och vid borttagning och bekräftar (H2, B8). Om konsumenter ska kunna köpa måste ångerrätt vid distansköp och samtycke till direkt påbörjad tjänst hanteras; om tjänsten riktas till företag och yrkesutförare kan det förenklas. Beslut: tjänsten säljs till företag och yrkesutförare, vilket förenklar konsumentreglerna; kunden intygar vid registreringen med en ruta och anger organisationsnummer (K9). |
 | Moms och bokföring | Moms på tjänsten (förmodligen 25 %), kvitto/faktura enligt kraven, och lagring av transaktionsunderlag enligt bokföringslagen, vilket begränsar radering av ett konto (K6). |
 | Datalicenser | Artdatabankens villkor, licenser per datakälla i SOS (iNaturalist-observatörer väljer licens per observation och den följer med i SOS-datat; i ett stickprov kring Uppsala (14 230 observationer sedan 2026-01-01) hade 1 952 av 2 560 iNaturalist-observationer licensen cc-by-nc, som utesluter kommersiell användning, medan Artportalens fynd anges som "Free usage" utan uttalad licens), Lantmäteriets villkor för kommersiell tjänst och avverkningsanmälans licens (Skogsstyrelsen: CC0, klarlagd). Notiserna visar art, tid, ungefärligt läge och länk, inte bilder. Frågor till juristen: (1) räknas notisens innehåll som användning av licensierat material, (2) gäller "icke-kommersiell" en betald tjänst som bara visar fakta och länk, och (3) ger Artdatabankens villkor för SOS rätt till kommersiell användning av alla källor. |
 | Skyddade arter | Fynd som Artdatabanken har dolt eller generaliserat ger inget eller bara osäkert notis, medan öppna fynd av skyddade arter ger notis; detta ska framgå i villkoren så att tjänsten inte läses som en fullständig garanti. |
 | Ansvar | Notiserna är information från tredje part och kan vara försenade, ofullständiga eller ha osäkert läge. Villkoren ska innehålla ansvarsbegränsning. Ingen ägarkontroll görs av fastigheter i version 1; villkoren lägger ansvaret på kunden (juristen bekräftar). |
 | Cookies | Endast nödvändiga cookies för inloggning i första versionen, så att ingen samtyckesbanner behövs (förslag). Det gäller så länge reklamen inte använder tredjepartsskript eller spårning (avsnitt 16). |
 | Besöksstatistik och kakor | Statistiken (avsnitt 5.9) är tänkt att samlas in utan kakor och utan lagrad IP-adress, för att undvika samtycke och kakbanner. En jurist ska bekräfta att det håller och att koppling av användningshändelser till kontot täcks av berättigat intresse eller avtal, samt godkänna texten i integritetspolicyn. |
+| Enskild firma och personnummer | Organisationsnumret för en enskild firma är ett personnummer, som är särskilt skyddat i svensk lag (K10). Tjänsten sparar numret och visar det bara på fakturan och i kontots inställningar. En jurist ska bekräfta att det håller och vad policyn ska säga. |
 
 ## 10. Mätetal och acceptanskriterier
 
@@ -328,7 +336,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | B13, A2, A4 | En giltig kod sänker totalen med rätt procent och visas på kvittot. En borttagen kod avvisas i nya köp men påverkar inte tidigare köp. Ändrat grundpris gäller nya köp, och redan köpta bevakningar behåller sitt pris. En vanlig kund når inte administrationen (A6). |
 | H4, H5 | En bevakning på 30 dagar kan förlängas; blir den totala perioden längre än 3 månader visas en varning, och förlängningen avvisas bara om köpet överstiger taket. Förlängningen ligger i varukorgen och ändrar slutdatum först när betalningen är bekräftad. |
 | P13 | Listan visar alla fastighetens avverkningsanmälningar i källan. Priset räknas bara på valda avverkningsanmälningar, och en fastighet utan någon vald avverkningsanmälan kan inte köpas med valet. Förvalt startdatum är den tidigaste valda avverkningsanmälans inkomdatum och förvalt slutdatum är den senaste valda plus 6 veckor. |
-| B10 | Ett köp utan ikryssat intyg, eller utan organisationsnummer i giltigt format, avvisas. Intyg, organisationsnummer och tidpunkt finns sparade och står på kvittot. |
+| B10 | En registrering utan ikryssat intyg, eller utan organisationsnummer i giltigt format, avvisas, och ett organisationsnummer som redan har ett konto avvisas. Intyg, organisationsnummer och tidpunkt finns sparade och står på kvittot, och kassan frågar inte efter dem. |
 | A1 | En administratör kan inte logga in utan tvåfaktor, och administratörskonton kan inte skapas eller göras till administratör via gränssnittet eller API:t. |
 | P14 | För Östra Storbyn 85:1 med båda avverkningsanmälningarna valda (inkomna 2023-05-31 och 2026-02-18) blir förvald period 2023-05-31 till 2026-04-01 med en varning om att den är längre än 3 månader, och köpet avvisas eftersom priset överstiger 5 000 kr. |
 | L6 | I förvalt läge ges notis för Artportalens fynd och observationer med cc0, cc-by eller cc-by-sa, men inga med cc-by-nc, cc-by-nc-sa eller utan angiven licens från andra källor än Artportalen. Administratören kan ändra filtret utan ny version. |
@@ -341,6 +349,7 @@ Kraven "så snart" (L1) och daglig sammanfattning kl 09:00 (S2) blir mätbara me
 | D17 | Registrering, ny bevakning med flera rader, varukorg, betalning och Mina bevakningar går att genomföra på en mobil (375 px bred) och på en iPad utan sidledes rullning och med alla knappar och fält nåbara med fingret. |
 | D18–D20 | På en ren Mac och en ren Linux-maskin med Docker och Git startar installationskommandot hela tjänsten. Ett simulerat köp av en bevakning för en fastighet i Dalarna ger en aktiv bevakning, en faktura, en notis i mejlfångaren och ett verifikat i den simulerade Bokio. En fastighet utanför Dalarna avvisas med ett begripligt meddelande. |
 | T1–T8 | Efter en testkörning med besök, registrering, köp och notiser visar administrationens statistik rätt antal i varje steg av trattten, och databasen innehåller ingen IP-adress. Inga kakor utom inloggningens sätts. Ett avslutat konto saknar kopplade händelser. Statistiken syns inte för vanliga kunder. |
+| K9, K10, P19, L10, B22, D21 | Ett andra konto med samma organisationsnummer avvisas, och numret kan inte ändras av kunden. En avverkningsanmälan som försvinner ur filen efter köpet ger en markering på raden men bevakas vidare utan ny yta och utan notis. Ett fynd inom två överlappande rader ger en notis med båda ärendenumren. Efter full återbetalning kan förstagångsrabatten användas igen. En bevakning med tre rader ger en sökning mot SOS per kontroll. |
 
 ## 11. Milstolpar och leveransplan
 
@@ -375,7 +384,7 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 10. Pris för komplettering | Nya hektar × återstående dagar × grundpris. Slutdatum är oförändrat. | P11 |
 | 11. Rabattkodens regler | Flergångskod utan giltighetstid, en kod per köp, ingen kombination av koder. | B14 |
 | 12. Vilka avverkningsanmälningar räknas | Kunden väljer avverkningsanmälningar i en lista över källans hela period (ca 5 år). Startdatum föreslås som tidigaste valda avverkningsanmälan och slutdatum som senaste valda plus 6 veckor (P13, P14). | P13 |
-| 13. Intyg om näringsverksamhet | Ikryssad ruta plus obligatoriskt organisationsnummer. Formatkontroll men ingen registerkontroll i version 1. | B10 |
+| 13. Intyg om näringsverksamhet | Ikryssad ruta plus obligatoriskt organisationsnummer, båda vid registreringen. Formatkontroll men ingen registerkontroll i version 1. | B10 |
 | 14. Administratörer | Tvåfaktor krävs. Administratörer skapas manuellt av driftansvarig, inte via gränssnittet. | A1 |
 | 15. En fastighet per bevakning | Flera fastigheter bevakas med flera bevakningar i samma varukorg. | P1 |
 | 16. Geometri vid köp | Ögonblicksbild av fastigheten och de valda avverkningsanmälningarna sparas vid köp. | P16 |
@@ -396,7 +405,7 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 31. Administratörens insäkt | Skrivskyddad, bara vid supportärende och loggad. | A7 |
 | 32. Molntjänst | AWS i Stockholm (eu-north-1) med hanterade tjänster. | D1 |
 | 33. Databas | PostgreSQL med PostGIS; geometri och skärningar i databasen. | D2 |
-| 34. Faktura | Betald faktura via Stripe Invoicing och Stripe Tax; organisationsnummer och fakturaadress i kassan. | B7 |
+| 34. Faktura | Betald faktura via Stripe Invoicing och Stripe Tax; kontots organisationsnummer och fakturaadress i kassan. | B7 |
 | 35. Kundinloggning | E-post och lösenord i version 1; tvåfaktor och BankID senare. | K3, avsnitt 15 |
 | 36. Bolag och domän | Bolaget bestäms senare; platshållarna i avsnitt 14 står kvar. Avsändardomän med SPF, DKIM och DMARC (D9) väljs när bolaget är känt. | D9, avsnitt 14 |
 | 37. Namn | Tjänsten heter Artbevakning, produkten bevakning och meddelandet notis (inte larm). Mappen artlarm/ och prototypens kod byter namn när bygget startar. | Glossarium |
@@ -416,6 +425,16 @@ Alla frågor har besvarats av beställaren och är inlagda i kraven.
 | 51. Bara Dalarna först | Första lösningen gäller fastigheter i Dalarnas län; länet är en inställning. | D20 |
 | 52. Egen statistik, inga kakor | Besöks- och användningsstatistik lagras i egen databas, utan kakor, utan IP-adress och utan tredjepartsverktyg. | T1, T2, T5 |
 | 53. Ingen spårning i mejl | Notiser mäts bara vid utskick; ingen spårningsbild och inga spårade länkar. | T4 |
+| 54. Organisationsnummer vid registrering | Organisationsnummer och intyg om näringsverksamhet anges vid registreringen och låses på kontot. | K9, K10, B10 |
+| 55. Ett konto per organisationsnummer | Ett organisationsnummer kan bara ha ett konto; flera användare är en framtida utökning. | K10 |
+| 56. Enskild firma tillåts | Personnumret som organisationsnummer behandlas som personuppgift och visas bara på fakturan. | K10 |
+| 57. Bara svenska företag | Bara svenska organisationsnummer i version 1; EU-företag med momsnummer är en framtida utökning. | K9, B7 |
+| 58. Svenska som enda språk | Gränssnitt, mejl, villkor och fakturor på svenska i version 1. | D22 |
+| 59. Anmälan som försvinner | Raden bevakas vidare med den frusna ytan, markeras och ger ingen återbetalning eller notis. | P19 |
+| 60. En notis för överlappande rader | Ett fynd i flera rader ger en notis som listar alla ärendenummer. | L10 |
+| 61. Sökning per bevakning | En SOS-sökning per bevakning och kontroll; filtrering per rad i egen databas. | D21 |
+| 62. Återbetalning återställer rabatter | Full återbetalning återställer förstagångsrabatten och den inbjudnas rabatt; inbjudarens dras tillbaka om den inte använts. | B22 |
+| 63. BAS-konton i simulerad Bokio | Konton som inställning med BAS-standard; bokföraren fastställer kontoplanen före riktiga Bokio. | D19 |
 
 **Kvarstående frågor**
 
@@ -454,7 +473,7 @@ Fastigheter, valet "endast avverkningsanmälda ytor" per fastighet med en lista 
 
 ![Skärmbild 3: varukorg och betalning](img/skarmbild-3-varukorg.png)
 
-Två bevakningar betalas med en betalning (B4, B5). Oxberg visas uppdelad i en rad per avverkningsanmälan med egen period och eget belopp (P17, B7). Ett pågående erbjudande dras av på en egen rad, tillsammans med en ruta för rabattkod; bara den bästa rabatten gäller (B18, B20, B21). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Köparen intygar också näringsverksamhet och anger organisationsnummer (B10).
+Två bevakningar betalas med en betalning (B4, B5). Oxberg visas uppdelad i en rad per avverkningsanmälan med egen period och eget belopp (P17, B7). Ett pågående erbjudande dras av på en egen rad, tillsammans med en ruta för rabattkod; bara den bästa rabatten gäller (B18, B20, B21). Kunden informeras om att ingen återbetalning sker vid borttagning innan betalning (B8); att kryssa i rutan är ett förslag på hur det kan lösas. Fakturan använder kontots organisationsnummer och intyget om näringsverksamhet från registreringen (K9, B10).
 
 ### 13.4 Mina bevakningar
 
@@ -488,7 +507,7 @@ Varukorgen visar bevakningens rader under varandra, och Mina bevakningar visar e
 
 ## 14. Avtal och bekräftelser (förslag)
 
-Kunden bekräftar två dokument vid registrering och två saker vid varje köp; fler avtal behövs inte, eftersom bara kontoinnehavarens egen e-postadress får notiser. Texterna nedan är utkast som juristen ska granska och fylla i (bolagsnamn, organisationsnummer, tvistelösning).
+Kunden bekräftar två dokument och intyget om näringsverksamhet vid registrering och en sak vid varje köp; fler avtal behövs inte, eftersom bara kontoinnehavarens egen e-postadress får notiser. Texterna nedan är utkast som juristen ska granska och fylla i (bolagsnamn, organisationsnummer, tvistelösning).
 
 ### 14.1 Vad kunden bekräftar och när
 
@@ -496,7 +515,7 @@ Kunden bekräftar två dokument vid registrering och två saker vid varje köp; 
 | --- | --- | --- | --- | --- |
 | Användarvillkor | Vid registrering, och vid väsentligt ändrade villkor nästa inloggning | Ikryssad ruta med länk till villkoren | Villkorens version, tidpunkt, konto | K8 |
 | Integritetspolicy (lagring av uppgifter) | Vid registrering | Ikryssad ruta med länk till policyn | Policyns version, tidpunkt, konto | K7 |
-| Köp i näringsverksamhet | Vid varje köp | Ikryssad ruta plus organisationsnummer | Intyg, organisationsnummer, tidpunkt; står på kvittot | B10 |
+| Näringsverksamhet och organisationsnummer | Vid registrering | Ikryssad ruta plus organisationsnummer | Intyg, organisationsnummer, tidpunkt; står på kvittot | K9, B10 |
 | Ingen återbetalning | Vid varje köp, vid borttagning av en bevakning och vid kontoavslut | Ikryssad ruta (vid köp och borttagning kompletterad med varning i klartext) | Tidpunkt, vad som togs bort | B8, H2, K6 |
 
 Föreslagen text vid rutorna: "Jag har läst och godkänner användarvillkoren", "Jag godkänner att mina uppgifter lagras enligt integritetspolicyn", "Jag köper i näringsverksamhet" och "Jag förstår att en borttagen bevakning inte ger återbetalning".
@@ -520,7 +539,7 @@ Villkoren är allmänna villkor för en webbtjänst (inte en EULA för installer
 ### 14.3 Integritetspolicy: utkast till innehåll
 
 - **Personuppgiftsansvarig:** \[bolaget, organisationsnummer, kontakt\].
-- **Uppgifter som lagras:** e-postadress, lösenord (endast som hash), vilka fastigheter och ytor som bevakas, bevakningar, skickade notiser, loggade godkännanden och köpintyg, betalningsunderlag samt besöks- och användningsstatistik (avsnitt 5.9). Kortuppgifter lagras inte av Artbevakning utan hos betalningsleverantören. Administratörer kan, för support och med loggning, se en kunds bevakningar och notiser.
+- **Uppgifter som lagras:** e-postadress, organisationsnummer (för enskilda firmor ett personnummer), lösenord (endast som hash), vilka fastigheter och ytor som bevakas, bevakningar, skickade notiser, loggade godkännanden och köpintyg, betalningsunderlag samt besöks- och användningsstatistik (avsnitt 5.9). Kortuppgifter lagras inte av Artbevakning utan hos betalningsleverantören. Administratörer kan, för support och med loggning, se en kunds bevakningar och notiser.
 - **Ändamål och rättslig grund:** leverera tjänsten (avtal), hantera betalning och bokföring (rättslig förpliktelse), säkerhet och missbruksskydd samt statistik för drift och utveckling (berättigat intresse). Om beslutet blir samtycke för delar av detta anges det här.
 - **Underleverantörer:** betalningsleverantör, molnleverantör och e-postleverantör; Artbevakning tecknar personuppgiftsbiträdesavtal med dem. Namn och land anges i policyn.
 - **Överföring utanför EU/EES:** om någon underleverantör gör det beskrivs skyddet (t.ex. standardavtalsklausuler).

@@ -11,7 +11,7 @@ Företaget eller yrkesutövaren som köper bevakningar och äger ett konto.
 _Avoid_: Användare, köpare, ägare, kontoinnehavare
 
 **Konto**:
-Kundens inloggning och inställningar. Notiser och sammanfattning går till kontots e-postadress, som är den enda mottagaren.
+Kundens inloggning och inställningar, knutna till kundens organisationsnummer som anges vid registreringen tillsammans med intyget om näringsverksamhet. Notiser och sammanfattning går till kontots e-postadress, som är den enda mottagaren.
 _Avoid_: Profil
 
 **Varukorg**:
@@ -41,7 +41,7 @@ _Avoid_: Välkomstrabatt, nykundsrabatt
 ### Bevakningen
 
 **Bevakning**:
-Det kunden köper: en fastighet, en bevakad yta och en bevakningsperiod som ger notiser om observationer.
+Det kunden köper: en fastighet, en bevakad yta och en bevakningsperiod som ger notiser om observationer. Vid avverkningsval består den av en rad per vald avverkningsanmälan.
 _Avoid_: Prenumeration, abonnemang
 
 **Fastighet**:
@@ -65,11 +65,11 @@ En anmälan om avverkning till Skogsstyrelsen, med en yta och ett inkomdatum.
 _Avoid_: Anmälan, avverkningsyta
 
 **Komplettering**:
-Tillägg av nya avverkningsanmälningar till en pågående bevakning mot betalning för återstående dagar.
+Tillägg av nya avverkningsanmälningar som nya rader i en pågående bevakning, var och en med egen bevakningsperiod, mot betalning.
 _Avoid_: Tillägg
 
 **Förlängning**:
-Senareläggning av en bevaknings slutdatum mot betalning för tillkommande dagar.
+Senareläggning av slutdatum för en bevakning, eller vid avverkningsval för en eller flera rader, mot betalning för tillkommande dagar.
 _Avoid_: Förnyelse
 
 ### Notiserna
