@@ -1,55 +1,60 @@
-# Plan skapad 2026-10-31 14:18 (torrkörning, ingenting styrs)
+# Plan skapad 2026-11-01 14:19 (torrkörning, ingenting styrs)
 
 ## Schema
 
 | Från | Till | Måltemp |
 |---|---|---|
-| Sat 31/10 14:00 | Sat 31/10 15:00 | 14.0 °C |
-| Sat 31/10 15:00 | Sat 31/10 19:00 | 12.0 °C |
-| Sat 31/10 19:00 | Sat 31/10 23:00 | 14.0 °C |
-| Sat 31/10 23:00 | Sun 01/11 00:00 | 16.0 °C |
-| Sun 01/11 00:00 | Sun 01/11 01:00 | 14.0 °C |
-| Sun 01/11 01:00 | Sun 01/11 10:00 | 16.0 °C |
-| Sun 01/11 10:00 | Sun 01/11 15:00 | 14.0 °C |
-| Sun 01/11 15:00 | Sun 01/11 22:00 | 12.0 °C |
-| Sun 01/11 22:00 | Sun 01/11 23:00 | 14.0 °C |
+| Sun 01/11 14:00 | Sun 01/11 16:00 | 14.0 °C |
+| Sun 01/11 16:00 | Sun 01/11 21:00 | 12.0 °C |
+| Sun 01/11 21:00 | Sun 01/11 23:00 | 14.0 °C |
 | Sun 01/11 23:00 | Mon 02/11 00:00 | 16.0 °C |
+| Mon 02/11 00:00 | Mon 02/11 01:00 | 14.0 °C |
+| Mon 02/11 01:00 | Mon 02/11 02:00 | 16.0 °C |
+| Mon 02/11 02:00 | Mon 02/11 06:00 | 14.0 °C |
+| Mon 02/11 06:00 | Mon 02/11 07:00 | 12.0 °C |
+| Mon 02/11 07:00 | Mon 02/11 08:00 | 14.0 °C |
+| Mon 02/11 08:00 | Mon 02/11 09:00 | 12.0 °C |
+| Mon 02/11 09:00 | Mon 02/11 15:00 | 16.0 °C |
+| Mon 02/11 15:00 | Mon 02/11 16:00 | 14.0 °C |
+| Mon 02/11 16:00 | Mon 02/11 20:00 | 12.0 °C |
+| Mon 02/11 20:00 | Mon 02/11 21:00 | 14.0 °C |
+| Mon 02/11 21:00 | Tue 03/11 00:00 | 16.0 °C |
 
 ## Timme för timme
 
 | Timme | Pris SEK/kWh | Ute °C | Måltemp | Skäl |
 |---|---|---|---|---|
-| Sat 31/10 14:00 | 1.67 | 3.8 | 14.0 | grundtemperatur |
-| Sat 31/10 15:00 | 1.889 | 3.8 | 12.0 | dyr timme, sänk |
-| Sat 31/10 16:00 | 2.062 | 2.9 | 12.0 | dyr timme, sänk |
-| Sat 31/10 17:00 | 1.895 | 1.7 | 12.0 | dyr timme, sänk |
-| Sat 31/10 18:00 | 1.77 | 1.2 | 12.0 | dyr timme, sänk |
-| Sat 31/10 19:00 | 1.741 | 1.4 | 14.0 | grundtemperatur |
-| Sat 31/10 20:00 | 1.749 | 1.4 | 14.0 | grundtemperatur |
-| Sat 31/10 21:00 | 1.676 | 1.5 | 14.0 | grundtemperatur |
-| Sat 31/10 22:00 | 1.466 | 1.5 | 14.0 | grundtemperatur |
-| Sat 31/10 23:00 | 1.395 | 1.6 | 16.0 | billig timme, förvärm |
-| Sun 01/11 00:00 | 1.422 | 1.8 | 14.0 | grundtemperatur |
-| Sun 01/11 01:00 | 1.371 | 2.1 | 16.0 | billig timme, förvärm |
-| Sun 01/11 02:00 | 1.361 | 2.8 | 16.0 | billig timme, förvärm |
-| Sun 01/11 03:00 | 1.339 | 3.3 | 16.0 | billig timme, förvärm |
-| Sun 01/11 04:00 | 1.28 | 3.5 | 16.0 | billig timme, förvärm |
-| Sun 01/11 05:00 | 1.248 | 3.6 | 16.0 | billig timme, förvärm |
-| Sun 01/11 06:00 | 1.287 | 3.8 | 16.0 | billig timme, förvärm |
-| Sun 01/11 07:00 | 1.291 | 4.0 | 16.0 | billig timme, förvärm |
-| Sun 01/11 08:00 | 1.336 | 4.2 | 16.0 | billig timme, förvärm |
-| Sun 01/11 09:00 | 1.378 | 4.4 | 16.0 | billig timme, förvärm |
-| Sun 01/11 10:00 | 1.439 | 4.5 | 14.0 | grundtemperatur |
-| Sun 01/11 11:00 | 1.477 | 4.5 | 14.0 | grundtemperatur |
-| Sun 01/11 12:00 | 1.548 | 5.0 | 14.0 | grundtemperatur |
-| Sun 01/11 13:00 | 1.532 | 5.5 | 14.0 | grundtemperatur |
-| Sun 01/11 14:00 | 1.561 | 5.8 | 14.0 | grundtemperatur |
-| Sun 01/11 15:00 | 1.752 | 6.1 | 12.0 | dyr timme, sänk |
-| Sun 01/11 16:00 | 2.104 | 6.2 | 12.0 | dyr timme, sänk |
-| Sun 01/11 17:00 | 2.148 | 6.1 | 12.0 | dyr timme, sänk |
-| Sun 01/11 18:00 | 2.179 | 6.1 | 12.0 | dyr timme, sänk |
-| Sun 01/11 19:00 | 2.148 | 6.2 | 12.0 | dyr timme, sänk |
+| Sun 01/11 14:00 | 1.561 | 7.4 | 14.0 | grundtemperatur |
+| Sun 01/11 15:00 | 1.752 | 7.4 | 14.0 | grundtemperatur |
+| Sun 01/11 16:00 | 2.104 | 7.0 | 12.0 | dyr timme, sänk |
+| Sun 01/11 17:00 | 2.148 | 6.9 | 12.0 | dyr timme, sänk |
+| Sun 01/11 18:00 | 2.179 | 7.0 | 12.0 | dyr timme, sänk |
+| Sun 01/11 19:00 | 2.148 | 6.6 | 12.0 | dyr timme, sänk |
 | Sun 01/11 20:00 | 2.033 | 5.8 | 12.0 | dyr timme, sänk |
-| Sun 01/11 21:00 | 1.764 | 5.0 | 12.0 | dyr timme, sänk |
-| Sun 01/11 22:00 | 1.56 | 4.2 | 14.0 | grundtemperatur |
-| Sun 01/11 23:00 | 1.347 | 3.7 | 16.0 | billig timme, förvärm |
+| Sun 01/11 21:00 | 1.764 | 5.1 | 14.0 | grundtemperatur |
+| Sun 01/11 22:00 | 1.56 | 4.5 | 14.0 | grundtemperatur |
+| Sun 01/11 23:00 | 1.347 | 4.2 | 16.0 | billig timme, förvärm |
+| Mon 02/11 00:00 | 1.47 | 4.0 | 14.0 | grundtemperatur |
+| Mon 02/11 01:00 | 1.466 | 3.7 | 16.0 | billig timme, förvärm |
+| Mon 02/11 02:00 | 1.474 | 3.4 | 14.0 | grundtemperatur |
+| Mon 02/11 03:00 | 1.485 | 2.7 | 14.0 | grundtemperatur |
+| Mon 02/11 04:00 | 1.501 | 2.1 | 14.0 | grundtemperatur |
+| Mon 02/11 05:00 | 1.523 | 1.7 | 14.0 | grundtemperatur |
+| Mon 02/11 06:00 | 2.866 | 1.5 | 12.0 | dyr timme, sänk |
+| Mon 02/11 07:00 | 1.724 | 1.6 | 14.0 | grundtemperatur |
+| Mon 02/11 08:00 | 1.925 | 1.3 | 12.0 | dyr timme, sänk |
+| Mon 02/11 09:00 | 1.266 | 2.1 | 16.0 | billig timme, förvärm |
+| Mon 02/11 10:00 | 1.256 | 3.5 | 16.0 | billig timme, förvärm |
+| Mon 02/11 11:00 | 1.293 | 4.9 | 16.0 | billig timme, förvärm |
+| Mon 02/11 12:00 | 1.289 | 5.8 | 16.0 | billig timme, förvärm |
+| Mon 02/11 13:00 | 1.246 | 6.2 | 16.0 | billig timme, förvärm |
+| Mon 02/11 14:00 | 1.256 | 6.3 | 16.0 | billig timme, förvärm |
+| Mon 02/11 15:00 | 1.476 | 5.7 | 14.0 | grundtemperatur |
+| Mon 02/11 16:00 | 2.249 | 4.1 | 12.0 | dyr timme, sänk |
+| Mon 02/11 17:00 | 2.388 | 2.9 | 12.0 | dyr timme, sänk |
+| Mon 02/11 18:00 | 2.722 | 2.1 | 12.0 | dyr timme, sänk |
+| Mon 02/11 19:00 | 2.221 | 1.4 | 12.0 | dyr timme, sänk |
+| Mon 02/11 20:00 | 1.581 | 0.9 | 14.0 | grundtemperatur |
+| Mon 02/11 21:00 | 1.238 | 0.7 | 16.0 | billig timme, förvärm |
+| Mon 02/11 22:00 | 1.304 | 0.6 | 16.0 | billig timme, förvärm |
+| Mon 02/11 23:00 | 1.319 | 0.3 | 16.0 | billig timme, förvärm |

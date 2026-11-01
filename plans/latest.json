@@ -1,49 +1,19 @@
 {
-  "created": "2026-10-31T14:18:25.147998+01:00",
+  "created": "2026-11-01T14:19:09.977479+01:00",
   "dry_run": true,
   "schedule": [
     {
-      "start": "2026-10-31T14:00:00+01:00",
-      "end": "2026-10-31T15:00:00+01:00",
+      "start": "2026-11-01T14:00:00+01:00",
+      "end": "2026-11-01T16:00:00+01:00",
       "setpoint_c": 14.0
     },
     {
-      "start": "2026-10-31T15:00:00+01:00",
-      "end": "2026-10-31T19:00:00+01:00",
+      "start": "2026-11-01T16:00:00+01:00",
+      "end": "2026-11-01T21:00:00+01:00",
       "setpoint_c": 12.0
     },
     {
-      "start": "2026-10-31T19:00:00+01:00",
-      "end": "2026-10-31T23:00:00+01:00",
-      "setpoint_c": 14.0
-    },
-    {
-      "start": "2026-10-31T23:00:00+01:00",
-      "end": "2026-11-01T00:00:00+01:00",
-      "setpoint_c": 16.0
-    },
-    {
-      "start": "2026-11-01T00:00:00+01:00",
-      "end": "2026-11-01T01:00:00+01:00",
-      "setpoint_c": 14.0
-    },
-    {
-      "start": "2026-11-01T01:00:00+01:00",
-      "end": "2026-11-01T10:00:00+01:00",
-      "setpoint_c": 16.0
-    },
-    {
-      "start": "2026-11-01T10:00:00+01:00",
-      "end": "2026-11-01T15:00:00+01:00",
-      "setpoint_c": 14.0
-    },
-    {
-      "start": "2026-11-01T15:00:00+01:00",
-      "end": "2026-11-01T22:00:00+01:00",
-      "setpoint_c": 12.0
-    },
-    {
-      "start": "2026-11-01T22:00:00+01:00",
+      "start": "2026-11-01T21:00:00+01:00",
       "end": "2026-11-01T23:00:00+01:00",
       "setpoint_c": 14.0
     },
@@ -51,216 +21,103 @@
       "start": "2026-11-01T23:00:00+01:00",
       "end": "2026-11-02T00:00:00+01:00",
       "setpoint_c": 16.0
+    },
+    {
+      "start": "2026-11-02T00:00:00+01:00",
+      "end": "2026-11-02T01:00:00+01:00",
+      "setpoint_c": 14.0
+    },
+    {
+      "start": "2026-11-02T01:00:00+01:00",
+      "end": "2026-11-02T02:00:00+01:00",
+      "setpoint_c": 16.0
+    },
+    {
+      "start": "2026-11-02T02:00:00+01:00",
+      "end": "2026-11-02T06:00:00+01:00",
+      "setpoint_c": 14.0
+    },
+    {
+      "start": "2026-11-02T06:00:00+01:00",
+      "end": "2026-11-02T07:00:00+01:00",
+      "setpoint_c": 12.0
+    },
+    {
+      "start": "2026-11-02T07:00:00+01:00",
+      "end": "2026-11-02T08:00:00+01:00",
+      "setpoint_c": 14.0
+    },
+    {
+      "start": "2026-11-02T08:00:00+01:00",
+      "end": "2026-11-02T09:00:00+01:00",
+      "setpoint_c": 12.0
+    },
+    {
+      "start": "2026-11-02T09:00:00+01:00",
+      "end": "2026-11-02T15:00:00+01:00",
+      "setpoint_c": 16.0
+    },
+    {
+      "start": "2026-11-02T15:00:00+01:00",
+      "end": "2026-11-02T16:00:00+01:00",
+      "setpoint_c": 14.0
+    },
+    {
+      "start": "2026-11-02T16:00:00+01:00",
+      "end": "2026-11-02T20:00:00+01:00",
+      "setpoint_c": 12.0
+    },
+    {
+      "start": "2026-11-02T20:00:00+01:00",
+      "end": "2026-11-02T21:00:00+01:00",
+      "setpoint_c": 14.0
+    },
+    {
+      "start": "2026-11-02T21:00:00+01:00",
+      "end": "2026-11-03T00:00:00+01:00",
+      "setpoint_c": 16.0
     }
   ],
   "hours": [
     {
-      "hour": "2026-10-31T14:00:00+01:00",
-      "price_sek_per_kwh": 1.67,
-      "outdoor_c": 3.8,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-10-31T15:00:00+01:00",
-      "price_sek_per_kwh": 1.889,
-      "outdoor_c": 3.8,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
-    },
-    {
-      "hour": "2026-10-31T16:00:00+01:00",
-      "price_sek_per_kwh": 2.062,
-      "outdoor_c": 2.9,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
-    },
-    {
-      "hour": "2026-10-31T17:00:00+01:00",
-      "price_sek_per_kwh": 1.895,
-      "outdoor_c": 1.7,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
-    },
-    {
-      "hour": "2026-10-31T18:00:00+01:00",
-      "price_sek_per_kwh": 1.77,
-      "outdoor_c": 1.2,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
-    },
-    {
-      "hour": "2026-10-31T19:00:00+01:00",
-      "price_sek_per_kwh": 1.741,
-      "outdoor_c": 1.4,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-10-31T20:00:00+01:00",
-      "price_sek_per_kwh": 1.749,
-      "outdoor_c": 1.4,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-10-31T21:00:00+01:00",
-      "price_sek_per_kwh": 1.676,
-      "outdoor_c": 1.5,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-10-31T22:00:00+01:00",
-      "price_sek_per_kwh": 1.466,
-      "outdoor_c": 1.5,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-10-31T23:00:00+01:00",
-      "price_sek_per_kwh": 1.395,
-      "outdoor_c": 1.6,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T00:00:00+01:00",
-      "price_sek_per_kwh": 1.422,
-      "outdoor_c": 1.8,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-11-01T01:00:00+01:00",
-      "price_sek_per_kwh": 1.371,
-      "outdoor_c": 2.1,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T02:00:00+01:00",
-      "price_sek_per_kwh": 1.361,
-      "outdoor_c": 2.8,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T03:00:00+01:00",
-      "price_sek_per_kwh": 1.339,
-      "outdoor_c": 3.3,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T04:00:00+01:00",
-      "price_sek_per_kwh": 1.28,
-      "outdoor_c": 3.5,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T05:00:00+01:00",
-      "price_sek_per_kwh": 1.248,
-      "outdoor_c": 3.6,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T06:00:00+01:00",
-      "price_sek_per_kwh": 1.287,
-      "outdoor_c": 3.8,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T07:00:00+01:00",
-      "price_sek_per_kwh": 1.291,
-      "outdoor_c": 4.0,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T08:00:00+01:00",
-      "price_sek_per_kwh": 1.336,
-      "outdoor_c": 4.2,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T09:00:00+01:00",
-      "price_sek_per_kwh": 1.378,
-      "outdoor_c": 4.4,
-      "setpoint_c": 16.0,
-      "reason": "billig timme, förvärm"
-    },
-    {
-      "hour": "2026-11-01T10:00:00+01:00",
-      "price_sek_per_kwh": 1.439,
-      "outdoor_c": 4.5,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-11-01T11:00:00+01:00",
-      "price_sek_per_kwh": 1.477,
-      "outdoor_c": 4.5,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-11-01T12:00:00+01:00",
-      "price_sek_per_kwh": 1.548,
-      "outdoor_c": 5.0,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
-      "hour": "2026-11-01T13:00:00+01:00",
-      "price_sek_per_kwh": 1.532,
-      "outdoor_c": 5.5,
-      "setpoint_c": 14.0,
-      "reason": "grundtemperatur"
-    },
-    {
       "hour": "2026-11-01T14:00:00+01:00",
       "price_sek_per_kwh": 1.561,
-      "outdoor_c": 5.8,
+      "outdoor_c": 7.4,
       "setpoint_c": 14.0,
       "reason": "grundtemperatur"
     },
     {
       "hour": "2026-11-01T15:00:00+01:00",
       "price_sek_per_kwh": 1.752,
-      "outdoor_c": 6.1,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
+      "outdoor_c": 7.4,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
     },
     {
       "hour": "2026-11-01T16:00:00+01:00",
       "price_sek_per_kwh": 2.104,
-      "outdoor_c": 6.2,
+      "outdoor_c": 7.0,
       "setpoint_c": 12.0,
       "reason": "dyr timme, sänk"
     },
     {
       "hour": "2026-11-01T17:00:00+01:00",
       "price_sek_per_kwh": 2.148,
-      "outdoor_c": 6.1,
+      "outdoor_c": 6.9,
       "setpoint_c": 12.0,
       "reason": "dyr timme, sänk"
     },
     {
       "hour": "2026-11-01T18:00:00+01:00",
       "price_sek_per_kwh": 2.179,
-      "outdoor_c": 6.1,
+      "outdoor_c": 7.0,
       "setpoint_c": 12.0,
       "reason": "dyr timme, sänk"
     },
     {
       "hour": "2026-11-01T19:00:00+01:00",
       "price_sek_per_kwh": 2.148,
-      "outdoor_c": 6.2,
+      "outdoor_c": 6.6,
       "setpoint_c": 12.0,
       "reason": "dyr timme, sänk"
     },
@@ -274,21 +131,189 @@
     {
       "hour": "2026-11-01T21:00:00+01:00",
       "price_sek_per_kwh": 1.764,
-      "outdoor_c": 5.0,
-      "setpoint_c": 12.0,
-      "reason": "dyr timme, sänk"
+      "outdoor_c": 5.1,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
     },
     {
       "hour": "2026-11-01T22:00:00+01:00",
       "price_sek_per_kwh": 1.56,
-      "outdoor_c": 4.2,
+      "outdoor_c": 4.5,
       "setpoint_c": 14.0,
       "reason": "grundtemperatur"
     },
     {
       "hour": "2026-11-01T23:00:00+01:00",
       "price_sek_per_kwh": 1.347,
+      "outdoor_c": 4.2,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T00:00:00+01:00",
+      "price_sek_per_kwh": 1.47,
+      "outdoor_c": 4.0,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T01:00:00+01:00",
+      "price_sek_per_kwh": 1.466,
       "outdoor_c": 3.7,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T02:00:00+01:00",
+      "price_sek_per_kwh": 1.474,
+      "outdoor_c": 3.4,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T03:00:00+01:00",
+      "price_sek_per_kwh": 1.485,
+      "outdoor_c": 2.7,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T04:00:00+01:00",
+      "price_sek_per_kwh": 1.501,
+      "outdoor_c": 2.1,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T05:00:00+01:00",
+      "price_sek_per_kwh": 1.523,
+      "outdoor_c": 1.7,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T06:00:00+01:00",
+      "price_sek_per_kwh": 2.866,
+      "outdoor_c": 1.5,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T07:00:00+01:00",
+      "price_sek_per_kwh": 1.724,
+      "outdoor_c": 1.6,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T08:00:00+01:00",
+      "price_sek_per_kwh": 1.925,
+      "outdoor_c": 1.3,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T09:00:00+01:00",
+      "price_sek_per_kwh": 1.266,
+      "outdoor_c": 2.1,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T10:00:00+01:00",
+      "price_sek_per_kwh": 1.256,
+      "outdoor_c": 3.5,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T11:00:00+01:00",
+      "price_sek_per_kwh": 1.293,
+      "outdoor_c": 4.9,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T12:00:00+01:00",
+      "price_sek_per_kwh": 1.289,
+      "outdoor_c": 5.8,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T13:00:00+01:00",
+      "price_sek_per_kwh": 1.246,
+      "outdoor_c": 6.2,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T14:00:00+01:00",
+      "price_sek_per_kwh": 1.256,
+      "outdoor_c": 6.3,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T15:00:00+01:00",
+      "price_sek_per_kwh": 1.476,
+      "outdoor_c": 5.7,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T16:00:00+01:00",
+      "price_sek_per_kwh": 2.249,
+      "outdoor_c": 4.1,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T17:00:00+01:00",
+      "price_sek_per_kwh": 2.388,
+      "outdoor_c": 2.9,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T18:00:00+01:00",
+      "price_sek_per_kwh": 2.722,
+      "outdoor_c": 2.1,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T19:00:00+01:00",
+      "price_sek_per_kwh": 2.221,
+      "outdoor_c": 1.4,
+      "setpoint_c": 12.0,
+      "reason": "dyr timme, sänk"
+    },
+    {
+      "hour": "2026-11-02T20:00:00+01:00",
+      "price_sek_per_kwh": 1.581,
+      "outdoor_c": 0.9,
+      "setpoint_c": 14.0,
+      "reason": "grundtemperatur"
+    },
+    {
+      "hour": "2026-11-02T21:00:00+01:00",
+      "price_sek_per_kwh": 1.238,
+      "outdoor_c": 0.7,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T22:00:00+01:00",
+      "price_sek_per_kwh": 1.304,
+      "outdoor_c": 0.6,
+      "setpoint_c": 16.0,
+      "reason": "billig timme, förvärm"
+    },
+    {
+      "hour": "2026-11-02T23:00:00+01:00",
+      "price_sek_per_kwh": 1.319,
+      "outdoor_c": 0.3,
       "setpoint_c": 16.0,
       "reason": "billig timme, förvärm"
     }
