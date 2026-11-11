@@ -1,45 +1,50 @@
-# Plan skapad 2026-11-10 20:53 (torrkörning, ingenting styrs)
+# Plan skapad 2026-11-11 20:46 (torrkörning, ingenting styrs)
 
 ## Schema
 
 | Från | Till | Måltemp |
 |---|---|---|
-| Tue 10/11 20:00 | Tue 10/11 23:00 | 14.0 °C |
-| Tue 10/11 23:00 | Wed 11/11 06:00 | 16.0 °C |
-| Wed 11/11 06:00 | Wed 11/11 10:00 | 14.0 °C |
-| Wed 11/11 10:00 | Wed 11/11 19:00 | 12.0 °C |
-| Wed 11/11 19:00 | Wed 11/11 22:00 | 14.0 °C |
-| Wed 11/11 22:00 | Thu 12/11 00:00 | 16.0 °C |
+| Wed 11/11 20:00 | Thu 12/11 00:00 | 12.0 °C |
+| Thu 12/11 00:00 | Thu 12/11 02:00 | 14.0 °C |
+| Thu 12/11 02:00 | Thu 12/11 06:00 | 16.0 °C |
+| Thu 12/11 06:00 | Thu 12/11 07:00 | 14.0 °C |
+| Thu 12/11 07:00 | Thu 12/11 11:00 | 12.0 °C |
+| Thu 12/11 11:00 | Thu 12/11 14:00 | 14.0 °C |
+| Thu 12/11 14:00 | Thu 12/11 15:00 | 16.0 °C |
+| Thu 12/11 15:00 | Thu 12/11 17:00 | 14.0 °C |
+| Thu 12/11 17:00 | Thu 12/11 18:00 | 12.0 °C |
+| Thu 12/11 18:00 | Thu 12/11 20:00 | 14.0 °C |
+| Thu 12/11 20:00 | Fri 13/11 00:00 | 16.0 °C |
 
 ## Timme för timme
 
 | Timme | Pris SEK/kWh | Ute °C | Måltemp | Skäl |
 |---|---|---|---|---|
-| Tue 10/11 20:00 | 3.586 | -0.5 | 14.0 | grundtemperatur |
-| Tue 10/11 21:00 | 2.86 | -0.2 | 14.0 | grundtemperatur |
-| Tue 10/11 22:00 | 2.357 | 0.3 | 14.0 | grundtemperatur |
-| Tue 10/11 23:00 | 2.046 | 0.7 | 16.0 | billig timme, förvärm |
-| Wed 11/11 00:00 | 1.57 | 0.9 | 16.0 | billig timme, förvärm |
-| Wed 11/11 01:00 | 1.548 | 1.0 | 16.0 | billig timme, förvärm |
-| Wed 11/11 02:00 | 1.534 | 1.0 | 16.0 | billig timme, förvärm |
-| Wed 11/11 03:00 | 1.512 | 0.9 | 16.0 | billig timme, förvärm |
-| Wed 11/11 04:00 | 1.491 | 0.8 | 16.0 | billig timme, förvärm |
-| Wed 11/11 05:00 | 1.477 | 0.8 | 16.0 | billig timme, förvärm |
-| Wed 11/11 06:00 | 2.546 | 0.8 | 14.0 | grundtemperatur |
-| Wed 11/11 07:00 | 3.141 | 0.8 | 14.0 | grundtemperatur |
-| Wed 11/11 08:00 | 3.75 | 0.8 | 14.0 | grundtemperatur |
-| Wed 11/11 09:00 | 3.909 | 0.7 | 14.0 | grundtemperatur |
-| Wed 11/11 10:00 | 3.926 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 11:00 | 3.95 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 12:00 | 3.966 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 13:00 | 4.06 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 14:00 | 3.99 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 15:00 | 4.063 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 16:00 | 4.271 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 17:00 | 4.258 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 18:00 | 4.049 | 0.8 | 12.0 | dyr timme, sänk |
-| Wed 11/11 19:00 | 3.52 | 0.9 | 14.0 | grundtemperatur |
-| Wed 11/11 20:00 | 2.991 | 0.9 | 14.0 | grundtemperatur |
-| Wed 11/11 21:00 | 2.686 | 1.1 | 14.0 | grundtemperatur |
-| Wed 11/11 22:00 | 2.048 | 1.3 | 16.0 | billig timme, förvärm |
-| Wed 11/11 23:00 | 1.624 | 1.4 | 16.0 | billig timme, förvärm |
+| Wed 11/11 20:00 | 2.991 | 1.2 | 12.0 | dyr timme, sänk |
+| Wed 11/11 21:00 | 2.686 | 1.3 | 12.0 | dyr timme, sänk |
+| Wed 11/11 22:00 | 2.048 | 1.2 | 12.0 | dyr timme, sänk |
+| Wed 11/11 23:00 | 1.624 | 1.2 | 12.0 | dyr timme, sänk |
+| Thu 12/11 00:00 | 1.487 | 1.1 | 14.0 | grundtemperatur |
+| Thu 12/11 01:00 | 1.419 | 1.0 | 14.0 | grundtemperatur |
+| Thu 12/11 02:00 | 1.354 | 0.9 | 16.0 | billig timme, förvärm |
+| Thu 12/11 03:00 | 1.295 | 0.8 | 16.0 | billig timme, förvärm |
+| Thu 12/11 04:00 | 1.248 | 0.7 | 16.0 | billig timme, förvärm |
+| Thu 12/11 05:00 | 1.304 | 0.7 | 16.0 | billig timme, förvärm |
+| Thu 12/11 06:00 | 1.39 | 0.7 | 14.0 | grundtemperatur |
+| Thu 12/11 07:00 | 1.806 | 0.8 | 12.0 | dyr timme, sänk |
+| Thu 12/11 08:00 | 1.785 | 0.9 | 12.0 | dyr timme, sänk |
+| Thu 12/11 09:00 | 1.648 | 1.1 | 12.0 | dyr timme, sänk |
+| Thu 12/11 10:00 | 1.569 | 1.2 | 12.0 | dyr timme, sänk |
+| Thu 12/11 11:00 | 1.463 | 1.3 | 14.0 | grundtemperatur |
+| Thu 12/11 12:00 | 1.415 | 1.1 | 14.0 | grundtemperatur |
+| Thu 12/11 13:00 | 1.379 | 0.8 | 14.0 | grundtemperatur |
+| Thu 12/11 14:00 | 1.368 | 0.9 | 16.0 | billig timme, förvärm |
+| Thu 12/11 15:00 | 1.372 | 0.9 | 14.0 | grundtemperatur |
+| Thu 12/11 16:00 | 1.415 | 1.0 | 14.0 | grundtemperatur |
+| Thu 12/11 17:00 | 1.534 | 1.1 | 12.0 | dyr timme, sänk |
+| Thu 12/11 18:00 | 1.468 | 1.0 | 14.0 | grundtemperatur |
+| Thu 12/11 19:00 | 1.486 | 1.0 | 14.0 | grundtemperatur |
+| Thu 12/11 20:00 | 1.259 | 0.8 | 16.0 | billig timme, förvärm |
+| Thu 12/11 21:00 | 1.072 | 0.8 | 16.0 | billig timme, förvärm |
+| Thu 12/11 22:00 | 1.019 | 0.6 | 16.0 | billig timme, förvärm |
+| Thu 12/11 23:00 | 0.981 | 0.5 | 16.0 | billig timme, förvärm |
